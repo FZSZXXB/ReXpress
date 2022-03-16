@@ -1,0 +1,85 @@
+<% this.title='登录' %>
+<%- include('head') %>
+<div class="ui error message" id="error" hidden></div>
+<div class="ui middle aligned center aligned grid">
+  <div class="row">
+	<div class="column" style="max-width: 450px">
+	  <h2 class="ui image header">
+		<div class="content" style="margin-bottom: 10px; ">
+		  登录
+		</div>
+	  </h2>
+	  <form class="ui large form">
+		<div class="ui existing segment">
+		  <div class="field">
+			<div class="ui left icon input">
+			  <i class="user icon"></i>
+			  <input name="username" placeholder="用户名" type="text" id="username" onkeydown="key_login(event)">
+			</div>
+		  </div>
+		  <div class="field">
+			<div class="ui left icon input">
+			  <i class="lock icon"></i>
+			  <input name="password" placeholder="密码" type="password" id="password" onkeydown="key_login(event)">
+			</div>
+		  </div>
+		  <div class="ui fluid large submit button" id="login">登录</div>
+		</div>
+
+	  </form>
+
+	</div>
+  </div>
+</div>
+<script type="text/javascript">
+function key_login(event) {
+	if (event.keyCode == 13) {
+		login();
+	}
+}
+function show_error(error) {
+	alert(error);
+}
+function success(session_id) {
+	window.location.href = location.protocol + '//' + location.host + <%- serializejs('/') %>;
+}
+function login() {
+	$("#login").addClass("loading");
+	$.ajax({
+		url: "/loginPage/login",
+		type: 'POST',
+		data: {
+			"username": $("#username").val(),
+			"password": $("#password").val()
+		},
+		async: true,
+		success: function(data) {
+			error_code = data.error_code;
+			switch (error_code) {
+				case 1001:
+					show_error("登陆失败。");
+					break;
+				case 1:
+					success(data.session_id);
+					return;
+				default:
+					show_error("未知错误。");
+					break;
+			}
+			$("#login").text("登录");
+			$("#login").removeClass("loading");
+		},
+		error: function(XMLHttpRequest, textStatus, errorThrown) {
+			alert(XMLHttpRequest.responseText);
+			show_error("未知错误");
+			$("#login").text("登录");
+		}
+	});
+}
+$(document).ready(function() {
+	$("#login").click(function() {
+		login();
+	});
+});
+</script>
+<%- include('foot') %>

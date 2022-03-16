@@ -1,0 +1,39 @@
+@media only screen and (max-width: 767px) {
+  #root {
+    padding-top: 16px;
+  }
+}
+@media only screen and (max-width: 1127px) {
+  .ui.container {
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+  #mainUiContainer {
+    width: auto !important;
+    margin-left: 15px !important;
+    margin-right: 15px !important;
+  }
+}
+@media only screen and (min-width: 1128px) {
+  #mainUiContainer,
+  #mainMenuContainer {
+    width: 1127px !important;
+  }
+  #mainUiContainer {
+    max-width: calc(100% - 30px);
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+  }
+}
+@media only screen and (max-width: 767px) {
+  ::-webkit-scrollbar {
+    all: unset !important;
+  }
+  ::-webkit-scrollbar-track {
+    all: unset !important;
+  }
+  ::-webkit-scrollbar-thumb {
+    all: unset !important;
+  }
+}

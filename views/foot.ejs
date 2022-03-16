@@ -1,0 +1,31 @@
+</div>
+<div class="ui vertical footer segment" style="margin-top: 15px; ">
+	<div class="ui center aligned container">
+		<span style="color: #999;">
+			Copyright © 2021 <p style="color: #8C9EFF !important; display: inline;">Reqwey</p> | 福州三中信息部</span>
+		</span>
+	</div>
+</div>
+</div>
+<script data-cfasync="false" src="<%- lib('semantic-ui/2.4.1/semantic.min.js') %>"></script>
+<script src="<%- lib('Chart.js/2.7.3/Chart.bundle.min.js') %>"></script>
+<script src="<%- selfLib('script.js') %>?20170710"></script>
+<script type="text/javascript">
+	function copyText(text) {
+		var $textarea = $('<textarea>');
+		$textarea.text(text);
+		$('body').append($textarea);
+		$textarea.select();
+		document.execCommand('copy');
+		$textarea.remove();
+	}
+	$('body').on('click', '*[data-click-copy]', function () {
+		var text = $(this).attr('data-click-copy');
+		copyText(text);
+	});
+</script>
+</div>
+</div>
+</body>
+
+</html>

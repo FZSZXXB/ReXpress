@@ -1,0 +1,76 @@
+<%
+if (error_code != 1) {
+this.title = '错误'
+%>
+<%- include('head') %>
+<div class="ui negative icon message">
+  <i class="remove icon"></i>
+  <div class="content">
+    <div class="header" style="margin-bottom: 10px; ">
+      错误代码：<%= error_code %>
+    </div>
+    <p>
+      <% if (error_code === 4001) { %>
+        无该场比赛。请联系管理员。
+      <% } else if (error_code === 4002) { %>
+        排行榜格式填写错误。请联系管理员。
+      <% } else { %>
+        未知错误。请联系管理员。
+      <% } %>
+    </p>
+  </div>
+</div>
+<%
+} else {
+  this.title = '排名 - ' + title
+%>
+<%- include('head') %>
+<style>
+.ranklist-item {
+  position: relative;
+}
+</style>
+<div class="padding">
+  <h1 class="ui center aligned header" style="margin-bottom: 30px; "><%= title %></h1>
+  <table class="ui very basic center aligned table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>班级</th>
+				<th>选手</th>
+				<th>详情</th>
+				<th>备注</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% let rank = 1; i = -1; %>
+      <% for (let item of detail) { %>
+        <%
+					++i;
+					if (i > 0 && detail[i][2] != detail[i - 1][2]) ++rank;
+				%>
+        <tr>
+          <td>
+            <% if (rank == 1) { %>
+            	<div class="ui yellow ribbon label">
+            <% } else if (rank == 2) { %>
+              <div class="ui ribbon label">
+            <% } else if (rank == 3) { %>
+              <div class="ui brown ribbon label" style="background-color: #C47222 !important;">
+            <% } else { %>
+              <div>
+            <% } %>
+              	<%= rank %>
+            	</div>
+          </td>
+          <td class="ranklist-item official"><%= item[0] %></td>
+          <td class="ranklist-item official"><span class="ranklist-user"><%= item[1] %></span></td>
+					<td class="ranklist-item official"><%= item[2] %></td>
+					<td class="ranklist-item official"><% if (item[3]) { %><%= item[3] %><% } else { %> - <% } %></td>
+        </tr>
+      <% } %>
+      </tbody>
+  </table>
+</div>
+<% } %>
+<%- include('foot') %>

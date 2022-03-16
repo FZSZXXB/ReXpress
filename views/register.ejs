@@ -1,0 +1,71 @@
+<% this.title='注册' %>
+<%- include('head') %>
+<div class="padding">
+<h1>注册</h1>
+<form class="ui form">
+	<div class="field">
+		<label for="username">用户名</label>
+		<input type="text" placeholder="" id="username">
+	</div>
+	<div class="two fields">
+		<div class="field">
+			<label class="ui header">密码</label>
+			<input type="password" placeholder="" id="password1">
+		</div>
+		<div class="field">
+			<label class="ui header">确认密码</label>
+			<input type="password" placeholder="" id="password2">
+		</div>
+	</div>
+	
+	<a id="sign_up" class="ui button" href="javascript:submit();">注册</a>
+</form>
+</div>
+<script type="text/javascript">
+	function show_error(error) {
+		alert(error);
+	}
+	function success() {
+		alert("注册成功！");
+		window.location.href = location.protocol + '//' + location.host + <%- serializejs('/') %>;
+	}
+	function submit() {
+		if ($("#password1").val() != $("#password2").val()) {
+			show_error("两次输入的密码不一致");
+			return;
+		}
+		$("#sign_up").addClass("loading");
+		$.ajax({
+			url: '/registerPage/register',
+			type: 'POST',
+			async: true,
+			data: {
+				username: $("#username").val(),
+				password: $("#password1").val()
+			},
+			success: function(data) {
+				var done = false;
+				error_code = data.error_code;
+				switch (error_code) {
+					case 2001:
+						show_error("注册失败。");
+						break;
+					case 1:
+						success();
+						done = true;
+						break;
+					default:
+						show_error("未知错误：" + JSON.stringify(data));
+						break;
+				}
+				$("#sign_up").removeClass("loading");
+			},
+			error: function(XMLHttpRequest, textStatus, errorThrown) {
+				alert(XMLHttpRequest.responseText);
+				show_error("未知错误");
+				$("#sign_up").removeClass("loading");
+			}
+			});
+		}
+</script>
+<%- include('foot') %>
