@@ -16,14 +16,14 @@ Date: 2019-11-01 11:37:02
 SET FOREIGN_KEY_CHECKS=0;
 
 -- -----------------------------
--- Table structure for newspaper
+-- Table structure for article
 -- -----------------------------
-DROP TABLE IF EXISTS `newspaper`;
-CREATE TABLE `newspaper` (
+DROP TABLE IF EXISTS `article`;
+CREATE TABLE `article` (
   `id` int(255) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `time` int NOT NULL,
-  `filename` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `content` text NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
