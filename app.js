@@ -14,8 +14,13 @@ let app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.locals.serializejs = serializejs;
+//文件上传
+let multer = require('multer');
+app.multer = multer({ dest: './tmp' });
 //静态路径
 app.use(express.static(path.join(__dirname, 'public')));
+//上传路径
+app.use(express.bodyParser({uploadDir: './uploads'}));
 //接受req.body参数配置
 app.use(bodyParser.urlencoded({extended: true}));
 //设置session
