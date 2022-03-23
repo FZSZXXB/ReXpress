@@ -21,8 +21,10 @@ SET FOREIGN_KEY_CHECKS=0;
 DROP TABLE IF EXISTS `article`;
 CREATE TABLE `article` (
   `id` int(255) NOT NULL AUTO_INCREMENT,
+  `create_time` int NOT NULL,
+  `update_time` int NOT NULL,
   `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `time` int NOT NULL,
+  `description` text NOT NULL,
   `content` text NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

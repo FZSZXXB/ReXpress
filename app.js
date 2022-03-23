@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const router = require('./routers');
 const serializejs = require('serialize-javascript');
-const connection = require('./routers/mysqldb');
+const MySQL = require('./routers/mysqldb');
 
 global.web_util = require('./utils');
 
@@ -39,6 +39,6 @@ app.use(session({
 //找到routers文件下的index.js导出的函数,传入app
 router(app);
 
-app.listen('8002', function () {
-    console.log("服务器在端口8002启动");
+app.listen('8003', function () {
+    console.log("服务器在端口8003启动");
 })
