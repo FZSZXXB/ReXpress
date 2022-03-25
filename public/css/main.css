@@ -37,3 +37,396 @@
     all: unset !important;
   }
 }
+
+#web_bg{
+  position:fixed;
+  top: 0;
+  left: 0;
+  width:100%;
+  height:100%;
+  min-width: 1000px;
+  z-index:-10;
+  zoom: 1;
+  background-color: #fff;
+  background-repeat: no-repeat;
+  background-size: cover;
+  -webkit-background-size: cover;
+  -o-background-size: cover;
+  background-position: center 0;
+}
+
+@font-face {
+  font-family: 'fwzc';
+  font-weight: bold;
+  font-style: normal;
+  src: url('https://cdn.jsdelivr.net/gh/FYMS-OI/cdn@2021-05-06/bin_data/fwzcN.OTF');
+  font-display: swap;
+}
+
+.ui.header,
+.ui.button,
+.ui.input input,
+.ui.menu,
+.ui.form input:not([type]),
+.ui.form input[type=date],
+.ui.form input[type=datetime-local],
+.ui.form input[type=email],
+.ui.form input[type=file],
+.ui.form input[type=number],
+.ui.form input[type=password],
+.ui.form input[type=search],
+.ui.form input[type=tel],
+.ui.form input[type=text],
+.ui.form input[type=time],
+.ui.form input[type=url],
+h1,
+h2,
+h3,
+h4,
+h5,
+body {
+  font-family: 'fwzc', Lato, -apple-system, 'PingFang SC', /* Apple */
+  'Source Han Sans SC', 'Noto Sans CJK SC', /* Google */
+  'Microsoft Yahei', 'Lantinghei SC', 'Hiragino Sans GB', 'Microsoft Sans Serif', /* M$ */
+  'WenQuanYi Micro Hei', /* *nix */
+  sans-serif;
+}
+
+@media only screen and (max-width: 992px) {
+  .ui.grid [class*="right floated"].column {
+      display: none!important;
+  }
+  .ui.column.grid>[class*="eleven wide"].column,
+  .ui.grid>.column.row>[class*="eleven wide"].column,
+  .ui.grid>.row>[class*="eleven wide"].column,
+  .ui.grid>[class*="eleven wide"].column {
+      width: 100%!important;
+  }
+}
+
+a {
+  color: #734ae6;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.28s ease;
+  -moz-transition: all 0.28s ease;
+  -webkit-transition: all 0.28s ease;
+  -o-transition: all 0.28s ease;
+}
+
+a:hover {
+  color: #ff5722;
+}
+
+a.black-link {
+  color: #000;
+}
+
+a.black-link:hover {
+  color: #ff5722;
+}
+
+.font-content {
+  font-family: 'Open Sans', 'Source Han Sans SC', 'Noto Sans CJK SC', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft Yahei', sans-serif;
+}
+
+.markdown-edit {
+  font-family: 'Fira Mono', 'Noto Sans CJK SC', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft Yahei', monospace;
+}
+.padding {
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
+.ui.segment:first-child {
+  margin-top: 0;
+}
+
+.ui.segment:last-child {
+  margin-bottom: 3px;
+}
+
+.hljs {
+  background: #FFF !important;
+}
+
+.ui.footer.segment {
+  margin: 2em 0em 0em;
+  padding: 1em 0em;
+  border: none;
+}
+
+th {
+  white-space: nowrap;
+}
+
+pre {
+  tab-size: 4;
+  overflow: auto;
+}
+
+img {
+  max-width: 100%;
+}
+
+table.center.aligned ul,
+table.center.aligned ol {
+  display: inline-block;
+  text-align: left;
+}
+
+body>.ui.page.dimmer {
+  position: fixed !important;
+}
+
+:not(.status_detail).status.success,
+.title:hover .status_detail.status.success,
+.title.active .status_detail.status.success,
+:not(.status_detail).status.submitted,
+.title:hover .status_detail.status.submitted,
+.title.active .status_detail.status.submitted,
+:not(.status_detail).status.accepted,
+.title:hover .status_detail.status.accepted,
+.title.active .status_detail.status.accepted {
+  color: forestgreen;
+}
+
+:not(.status_detail).status.wrong_answer,
+.title:hover .status_detail.status.wrong_answer,
+.title.active .status_detail.status.wrong_answer {
+  color: red;
+}
+
+:not(.status_detail).status.invalid_interaction,
+.title:hover .status_detail.status.invalid_interaction,
+.title.active .status_detail.status.invalid_interaction,
+:not(.status_detail).status.runtime_error,
+.title:hover .status_detail.status.runtime_error,
+.title.active .status_detail.status.runtime_error,
+:not(.status_detail).status.file_error,
+.title:hover .status_detail.status.file_error,
+.title.active .status_detail.status.file_error {
+  color: darkorchid;
+}
+
+:not(.status_detail).status.memory_limit_exceeded,
+.title:hover .status_detail.status.memory_limit_exceeded,
+.title.active .status_detail.status.memory_limit_exceeded,
+:not(.status_detail).status.time_limit_exceeded,
+.title:hover .status_detail.status.time_limit_exceeded,
+.title.active .status_detail.status.time_limit_exceeded,
+:not(.status_detail).status.output_limit_exceeded,
+.title:hover .status_detail.status.output_limit_exceeded,
+.title.active .status_detail.status.output_limit_exceeded {
+  color: sandybrown;
+}
+
+:not(.status_detail).status.waiting,
+.title:hover .status_detail.status.waiting,
+.title.active .status_detail.status.waiting,
+:not(.status_detail).status.system_error {
+  color: grey;
+}
+
+:not(.status_detail).status.unknown {
+  color: #e28989;
+}
+
+:not(.status_detail).status.running,
+.title:hover .status_detail.status.running,
+.title.active .status_detail.status.running,
+:not(.status_detail).status.pending,
+.title:hover .status_detail.status.pending,
+.title.active .status_detail.status.pending,
+:not(.status_detail).status.judging,
+.title:hover .status_detail.status.judging,
+.title.active .status_detail.status.judging {
+  color: #6cf;
+}
+
+:not(.status_detail).status.partially_correct,
+.title:hover .status_detail.status.partially_correct,
+.title.active .status_detail.status.partially_correct {
+  color: #01bab2;
+}
+
+:not(.status_detail).status.judgement_failed,
+.title:hover .status_detail.status.judgement_failed,
+.title.active .status_detail.status.judgement_failed {
+  color: #FF5722;
+}
+
+:not(.status_detail).status.skipped,
+.title:hover .status_detail.status.skipped,
+.title.active .status_detail.status.skipped {
+  color: #78909C;
+}
+
+:not(.status_detail).status.compiling {
+  color: #00b5ad;
+}
+
+:not(.status_detail).status.no_testdata {
+  color: brown;
+}
+
+:not(.status_detail).status.compile_error {
+  color: rgb(0, 68, 136);
+}
+
+
+/* score color */
+
+.score_0 {
+  color: red;
+}
+
+.score_1 {
+  color: #ff4b00;
+}
+
+.score_2 {
+  color: #ff6200;
+}
+
+.score_3 {
+  color: #ffa900;
+}
+
+.score_4 {
+  color: #ffd800;
+}
+
+.score_5 {
+  color: #c8ff00;
+}
+
+.score_6 {
+  color: #a5ff00;
+}
+
+.score_7 {
+  color: #52ff00;
+}
+
+.score_8 {
+  color: #41f741;
+}
+
+.score_9 {
+  color: #34d034;
+}
+
+.score_10 {
+  color: forestgreen;
+}
+
+.score {
+  text-shadow: 0 0 0.1px;
+}
+
+.rating_up {
+  color: #dd4b39;
+}
+
+.rating_down {
+  color: #3d9400;
+}
+
+
+/* code tag */
+
+:not(pre)>code {
+  padding: 2px 4px;
+  border-radius: 0.3rem;
+  font-size: 0.9rem;
+  color: #745fb5;
+  background-color: #f4f2f9;
+  margin: 0 2px;
+}
+
+code {
+  font-family: "Fira Mono", "Monaco", "Menlo", "Ubuntu Mono", "Consolas", "source-code-pro", monospace;
+}
+
+/* blockquote */
+blockquote {
+  border-left: 0.2em solid rgba(116,95,181,0.2);
+  padding-left: 1em;
+  color: #666666;
+margin-left: 0;
+  margin-right: 0;
+}
+
+/* Animated spinner */
+
+@keyframes spinner-icon-rotate {
+  0% {
+      transform: rotate(0deg);
+  }
+  100% {
+      transform: rotate(360deg);
+  }
+}
+
+.spinner.icon:before {
+  animation: spinner-icon-rotate 3s linear infinite;
+  display: block;
+}
+
+::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 0px;
+}
+
+::-webkit-scrollbar-thumb {
+  cursor: pointer;
+  border-radius: 5px;
+  background: rgba(0, 0, 0, 0.25);
+  -webkit-transition: color 0.2s ease;
+  transition: color 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:window-inactive {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(128, 135, 139, 0.8);
+}
+
+.ui.top.attached.block.header i.icon {
+  font-size: 1em;
+  vertical-align: initial;
+}
+
+.ui.selection.dropdown .menu>.item {
+  padding-left: 0.8rem !important;
+  padding-right: 0 !important;
+}
+
+/* .ui.footer.segment, .ui.table {
+  backdrop-filter: saturate(200%) blur(100px) !important;
+} */
+
+.CodeMirror-code {
+  font-family: 'Fira Mono', 'Noto Sans CJK SC', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft Yahei', monospace;
+}
+
+.mp-preview-content {
+  font-family: 'Open Sans', 'Source Han Sans SC', 'Noto Sans CJK SC', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft Yahei', sans-serif;
+}
+
+h1, h2, h3, h4, h5 {
+  color: rgb(0, 68, 136);
+}
+
+.description {
+  color: rgba(0,0,0,.6);
+}

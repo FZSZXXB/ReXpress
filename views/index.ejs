@@ -22,278 +22,81 @@
     -webkit-transition: color .1s ease,border-color .1s ease;
     transition: color .1s ease,border-color .1s ease;
 }
-.p-black {
-  font-weight: bold;
-  color: rgb(0, 0, 0) !important;
-}
-.p-gray {
-  font-weight: bold;
-  color: rgb(128, 128, 128) !important
-}
-.p-blue {
-  font-weight: bold;
-  color: rgb(52, 152, 219) !important;
-}
-.p-teal {
-  font-weight: bold;
-  color: rgb(3, 168, 158) !important;
-}
-.p-cyan {
-  font-weight: bold;
-  color: #81D4FA !important;
-}
-.p-pink {
-  font-weight: bold;
-  color: #F06292 !important;
-}
-.p-orange {
-  font-weight: bold;
-  color: rgb(243, 156, 17) !important;
-}
-.p-red {
-  font-weight: bold;
-  color: rgb(254, 76, 97) !important;
-}
-.p-purple {
-  font-weight: bold;
-  color: rgb(157, 61, 207) !important;
-}
 </style>
-<% if (user) { %>
-<div class="ui modal" id="modal-edit0">
-  <div class="ui header">
-    更新比赛
-  </div>
-  <div class="content">
-    <div class="ui form">
-      <div class="fields">
-        <div class="field">
-          <label>年段</label>
-          <div class="ui selection dropdown" id="grade">
-            <input type="hidden" id="grade0" value="0">
-            <i class="dropdown icon"></i>
-            <div class="default text">. . .</div>
-            <div class="menu">
-              <div class="item" data-value="0"><span class="p-purple">教工</span></div>
-              <div class="item" data-value="1"><span class="p-red">高一</span></div>
-              <div class="item" data-value="2"><span class="p-orange">高二</span></div>
-              <div class="item" data-value="3"><span class="p-blue">高三</span></div>
-            </div>
-          </div>
-        </div>
-        <div class="field">
-          <label>组别</label>
-          <div class="ui selection dropdown" id="type">
-            <input type="hidden" id="type0" value="stu_male">
-            <i class="dropdown icon"></i>
-            <div class="default text">. . .</div>
-            <div class="menu">
-              <div class="item" data-value="stu_male"><span class="p-blue">学生男子组</span></div>
-              <div class="item" data-value="stu_female"><span class="p-red">学生女子组</span></div>
-              <div class="item" data-value="stu_union"><span class="p-orange">学生集体组</span></div>
-              <div class="item" data-value="teach_1"><span class="p-purple">教工甲组</span></div>
-              <div class="item" data-value="teach_2"><span class="p-cyan">教工乙组</span></div>
-              <div class="item" data-value="teach_3"><span class="p-pink">教工丙组</span></div>
-              <div class="item" data-value="teach_union"><span class="p-teal">教工集体组</span></div>
-            </div>
-          </div>
-        </div>
-        <div class="field">
-          <label>名称</label>
-          <input type="text" id="title0" value="">
-        </div>
-        <div class="field">
-          <label>时间</label>
-          <input type="text" id="time0"
-            value="<%= web_util.formatDate(web_util.getCurrentDate()) %>">
-        </div>
-        <div class="field">
-          <label>比赛排名（格式：从高到低:班级 姓名 详情 备注一行一个）</label>
-          <textarea cols="8" type="text"
-            id="rating0"></textarea>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="actions">
-    <div class="ui cancel button">
-      <i class="logout icon"></i>
-      取消
-    </div>
-    <div class="ui green ok button" onclick="javascript:submit(0)">
-      <i class="checkmark icon"></i>
-      确定
-    </div>
-  </div>
+<% if (articles.length) { for (let a of articles) { %>
+<div class="ui segment">
+<a href="/article/<%= a.id %>"><h2><%= a.title %></h2></a>
+<p class="description">
+  <% if (a.description) { %><%= a.description %>
+  <% } else { %>暂无描述~<% } %>
+</p>
+<div  style="text-align: right;"><a href="/article/<%= a.id %>">查看更多&nbsp;&nbsp;<i class="fad fa-angle-right fa-fl"></i></a></div>
+
 </div>
-<form class="ui mini form">
-  <div class="inline fields" style="margin-bottom: 25px; white-space: nowrap; ">
-    <div onclick="$('#modal-edit0').modal('show')" class="ui mini labeled icon right floated button" style="margin-left: auto; ">
-      <i class="ui icon write"></i>
-      更新比赛
-    </div>
-  </div>
-</form>
-<% } %>
-<% if (contests.length) { %>
-  <div class="ui segment" style="margin-top: 1rem;">
-    <table id="rmtc" class="ui basic celled center aligned table">
-      <thead>
-        <tr>
-          <th>年段</th>
-          <th>组别</th>
-          <th>名称</th>
-          <th>时间</th>
-          <th>排名</th><% if (user) { %>
-          <th>操作</th><% } %>
-        </tr>
-      </thead>
-    <tbody>
-    <% for (let contest of contests) { %>
-    <tr>
-      <td><span class="p-<%- getGradeColor(contest.grade) %>"><%- getGradeName(contest.grade) %></span></td>
-      <td><span class="p-<%- getTypeColor(contest.type) %>"><%- getTypeName(contest.type) %></span></td>
-      <td id="title"><%= contest.title %></td>
-      <td><%= web_util.formatDate(contest.time) %></td>
-      <td><a class="ui blue mini basic button" href="<%- web_util.makeUrl(['contest', contest.id, 'rating']) %>">点击查看</a></td>
-      <% if (user) { %>
-      <div class="ui modal" id="modal-edit<%= contest.id %>">
-        <div class="ui header">
-          编辑这场比赛
-        </div>
-        <div class="content">
-          <div class="ui form">
-            <div class="fields">
-              <div class="field">
-                <label>年段</label>
-                <div class="ui selection dropdown" id="grade">
-                  <input type="hidden" id="grade<%= contest.id %>" value="<%= contest.grade %>">
-                  <i class="dropdown icon"></i>
-                  <div class="default text">. . .</div>
-                  <div class="menu">
-                    <div class="item" data-value="0"><span class="p-purple">教工</span></div>
-                    <div class="item" data-value="1"><span class="p-red">高一</span></div>
-                    <div class="item" data-value="2"><span class="p-orange">高二</span></div>
-                    <div class="item" data-value="3"><span class="p-blue">高三</span></div>
-                  </div>
-                </div>
-              </div>
-              <div class="field">
-                <label>组别</label>
-                <div class="ui selection dropdown" id="type">
-                  <input type="hidden" id="type<%= contest.id %>" value="<%= contest.type %>">
-                  <i class="dropdown icon"></i>
-                  <div class="default text">. . .</div>
-                  <div class="menu">
-                    <div class="item" data-value="stu_male"><span class="p-blue">学生男子组</span></div>
-                    <div class="item" data-value="stu_female"><span class="p-red">学生女子组</span></div>
-                    <div class="item" data-value="stu_union"><span class="p-orange">学生集体组</span></div>
-                    <div class="item" data-value="teach_1"><span class="p-purple">教工甲组</span></div>
-                    <div class="item" data-value="teach_2"><span class="p-cyan">教工乙组</span></div>
-                    <div class="item" data-value="teach_3"><span class="p-pink">教工丙组</span></div>
-                    <div class="item" data-value="teach_union"><span class="p-teal">教工集体组</span></div>
-                  </div>
-                </div>
-              </div>
-              <div class="field">
-                <label>名称</label>
-                <input type="text" id="title<%= contest.id %>" value="<%= contest.title %>">
-              </div>
-              <div class="field">
-                <label>时间</label>
-                <input type="text" id="time<%= contest.id %>" value="<%= web_util.formatDate(contest.time || web_util.getCurrentDate()) %>">
-              </div>
-              <div class="field">
-                <label>比赛排名（格式：从高到低:班级 姓名 详情 备注一行一个）</label>
-                <textarea cols="8" type="text" id="rating<%= contest.id %>"><%= contest.rating.replace('\n', '\r\n' ) %></textarea>
-              </div>
-            </div>
-            </div>
-          </div>
-        <div class="actions">
-          <div class="ui cancel button">
-            <i class="logout icon"></i>
-            取消
-          </div>
-          <div class="ui green ok button" onclick="javascript:submit(<%= contest.id %>)">
-            <i class="checkmark icon"></i>
-            确定
-          </div>
-        </div>
-        </div>
-        <td id="manage">
-          <div class="ui buttons"><button class="ui circular mini icon button" onclick="$('#modal-edit<%= contest.id %>').modal('show')"><i class="ui edit icon"></i></button></div>
-        </td>
-        <% } %>
-        </tr>
-      <% } %>
-    </tbody>
-  </table>
-</div>
-<% } else { %>
+<% }} else { %>
 <div class="ui placeholder segment">
   <div class="ui icon header">
     <i class="calendar icon" style="margin-bottom: 20px; "></i>
-    暂无比赛，敬请期待~
+    暂无文章，敬请期待~
   </div>
 </div>
 <% } %>
 
 <script>
-  $(function () {
-    $('.ui.dropdown:not(.simple)').dropdown();
-    $('.ui.accordion').accordion();
-  })
-  function show_error(error) {
-    swal({
-      title: "修改失败。",
-      icon: "error",
-      text: error
-    });
-  }
-  function success(session_id) {
-    // window.location.href = location.protocol + '//' + location.host + <%- serializejs('/') %>;
-    swal({
-      title: "修改成功！",
-      icon: "success"
-    }).then(function () {
-      window.location.reload();
-    });
-  }
-  function submit(value) {
-    $.ajax({
-      url: `/contest/${value}/edit`,
-      type: 'POST',
-      data: {
-        "grade": $(`#grade${value}`).val(),
-        "type": $(`#type${value}`).val(),
-        "title": $(`#title${value}`).val(),
-        "time": $(`#time${value}`).val(),
-        "rating": $(`#rating${value}`).val()
-      },
-      async: true,
-      success: function(data) {
-        error_code = data.error_code;
-        switch (error_code) {
-          case 3001:
-            show_error("没有权限。");
-            break;
-          case 3002:
-            show_error("格式不正确。");
-            break;
-          case 1:
-            success(data.session_id);
-            return;
-          default:
-            show_error("未知错误。错误代码 " + error_code + " : " + data.detail);
-            break;
-        }
-      },
-      error: function (XMLHttpRequest, textStatus, errorThrown) {
-        alert(XMLHttpRequest.responseText);
-        show_error("未知错误");
-      }
-    });
-  }
+  // $(function () {
+  //   $('.ui.dropdown:not(.simple)').dropdown();
+  //   $('.ui.accordion').accordion();
+  // })
+  // function show_error(error) {
+  //   swal({
+  //     title: "修改失败。",
+  //     icon: "error",
+  //     text: error
+  //   });
+  // }
+  // function success(session_id) {
+  //   // window.location.href = location.protocol + '//' + location.host + <%- serializejs('/') %>;
+  //   swal({
+  //     title: "修改成功！",
+  //     icon: "success"
+  //   }).then(function () {
+  //     window.location.reload();
+  //   });
+  // }
+  // function submit(value) {
+  //   $.ajax({
+  //     url: `/contest/${value}/edit`,
+  //     type: 'POST',
+  //     data: {
+  //       "grade": $(`#grade${value}`).val(),
+  //       "type": $(`#type${value}`).val(),
+  //       "title": $(`#title${value}`).val(),
+  //       "time": $(`#time${value}`).val(),
+  //       "rating": $(`#rating${value}`).val()
+  //     },
+  //     async: true,
+  //     success: function(data) {
+  //       error_code = data.error_code;
+  //       switch (error_code) {
+  //         case 3001:
+  //           show_error("没有权限。");
+  //           break;
+  //         case 3002:
+  //           show_error("格式不正确。");
+  //           break;
+  //         case 1:
+  //           success(data.session_id);
+  //           return;
+  //         default:
+  //           show_error("未知错误。错误代码 " + error_code + " : " + data.detail);
+  //           break;
+  //       }
+  //     },
+  //     error: function (XMLHttpRequest, textStatus, errorThrown) {
+  //       alert(XMLHttpRequest.responseText);
+  //       show_error("未知错误");
+  //     }
+  //   });
+  // }
 </script>
 <%- include('foot') %> 

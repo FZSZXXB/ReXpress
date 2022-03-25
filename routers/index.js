@@ -2,9 +2,9 @@ const Register = require('./register');
 const Login = require('./login');
 const Article = require('./article');
 const MySQL = require('./mysqldb');
-const Api = requre('./api');
+const Api = require('./api');
 const url = require("url");
-const fs = requir("fs-extra");
+const fs = require("fs");
 
 module.exports = function (app) {
 	// 路由挂载
@@ -12,7 +12,7 @@ module.exports = function (app) {
 	app.get('/', function (req, res) {
 		try {
 			res.locals.user = req.session.user;
-			MySQL.query(`SELECT * FROM article ORDER BY article.time DESC`, function (error, results, fields) {
+			MySQL.query(`SELECT * FROM article ORDER BY article.create_time DESC`, function (error, results, fields) {
 				if (error) throw error;
 				res.render("index", { articles: results });
 			})

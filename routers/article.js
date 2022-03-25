@@ -1,6 +1,8 @@
-const express = require('express');
-const url = require("url");
-const MySQL = require('./mysqldb');
+let express = require('express');
+let url = require("url");
+let MySQL = require('./mysqldb');
+let md = require('markdown-it')();
+let { kill } = require('process');
 //路由对象
 let router = express.Router();
 //中间件,未登录不能访问发表文章页面
@@ -22,12 +24,27 @@ router.get('/:id/', function (req, res) {
 			else {
 				res.render('page', {
 					title: results[0].title,
-					content: results[0].content
+					content: md.render(results[0].content)
 				});
 			}
 		})
 	} catch (e) {
 		res.render('page', { error_code: 4002 });
+	}
+})
+
+router.get('/:id/edit', checklogin, function (req, res) {
+	try {
+		let id = parseInt(req.params.id);
+		MySQL.query(`SELECT * FROM article WHERE id = ${id}`, function (error, results, fields) {
+			if (results.length === 0) {
+				res.render('edit');
+			} else {
+				res.render('edit', { article: results[0] });
+			}
+		});
+	} catch (e) {
+		res.render('edit', { error: e });
 	}
 })
 
@@ -41,7 +58,7 @@ router.post('/:id/edit', function (req, res) {
 			if (req.body.title.length === 0) throw 3002; // 标题无效
 			MySQL.query(`SELECT * FROM article WHERE id = ${id}`, function (error, results, fields) {
 				let nowTime = web_util.getCurrentDate(true);
-				let description = req.body.description ? req.body.description : "暂时没有描述~";
+				let description = req.body.description;
 				if (results.length === 0) {
 					MySQL.query(`INSERT INTO article(title,create_time,update_time,description,content) \
 										VALUES("${req.body.title}",${nowTime},${nowTime},"${description}","${req.body.content}")`, function (error, results, fields) {
@@ -70,17 +87,17 @@ router.post('/:id/delete', function (req, res) {
 		res.setHeader('Content-Type', 'application/json');
 		let id = parseInt(req.params.id);
 		MySQL.query(`delete from article where id=${id}`, function (error, results, fields) {
-			if (error) res.send(JSON.stringify({ error_code: 4009, detail: error.message }));
+			if (error) throw error.message;
 			else {
 				fs.unlink(path.join('data', id), function (err) {
-					if (err) throw 4001;
+					if (err) throw err;
 					console.log('File deleted!');
 				});
-				throw 1;
+				throw 'ok';
 			}
 		})
 	} catch (e) {
-		res.send(JSON.stringify({ error_code: e }));
+		res.send(JSON.stringify({ error: e }));
 	}
 })
 //导出路由对象

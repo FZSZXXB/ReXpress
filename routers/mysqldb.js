@@ -7,7 +7,7 @@ let MySQL = mysql.createPool({
     database: 'newspaper'
 });
 //连接数据库
-MySQL.getMySQL(function (err, connect) {
+MySQL.getConnection(function (err, connect) {
     if (err)
         console.log(`mysql链接失败${err}`);
 });

@@ -20,8 +20,9 @@ app.multer = multer({ dest: './tmp' });
 //静态路径
 app.use(express.static(path.join(__dirname, 'public')));
 //上传路径
-app.use(express.bodyParser({uploadDir: './uploads'}));
+app.use(bodyParser.json());
 //接受req.body参数配置
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 //设置session
 app.use(session({
