@@ -430,3 +430,8 @@ h1, h2, h3, h4, h5 {
 .description {
   color: rgba(0,0,0,.6);
 }
+
+img {
+  display: block;
+  margin: 0px auto;
+}

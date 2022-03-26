@@ -34,7 +34,7 @@
 				<div class="ui simple dropdown item">
 					<span class="user" style="margin-right: 5px;"><%= user.username %></span><i class="fad fa-angle-down"></i>
 					<div class="menu">
-						<a class="item" href-post="<%= web_util.makeUrl(['loginPage', 'logout'], { url: '/' }) %>"><i class="fad fa-power-off"></i>注销</a>
+						<a class="item" href="<%= web_util.makeUrl(['loginPage', 'logout'], { url: '/' }) %>"><i class="fad fa-power-off"></i>注销</a>
 					</div>
 				</div>
 				<% } else { %>

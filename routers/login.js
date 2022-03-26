@@ -40,7 +40,7 @@ router.post('/login', function (req, res) {
 	}
 })
 //退出登录
-router.post('/logout', function (req, res) {
+router.get('/logout', function (req, res) {
 	req.session.user = '';
 	res.redirect('/loginPage');
 })

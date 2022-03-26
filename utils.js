@@ -18,7 +18,7 @@ module.exports = {
 		}
 		let m = moment(ts * 1000);
 		m.locale('eu');
-		return m.format(format || 'L H:mm:ss');
+		return m.format(format || 'L');
 	},
 	formatTime(x) {
 		let sgn = x < 0 ? '-' : '';

@@ -1,3 +1,125 @@
-<%- include('head.ejs') %>
-</body>
-</html>
+<% if (article) { this.title = article.title; } else { this.title = "新建文章"; } %>
+
+<% let panguMode='disabled' %>
+<%- include('head') %>
+<% if (article) { %>
+  <h4 class="ui top attached block header"><i class="ui folder icon"></i>文件列表</h4>
+  <div class="ui bottom attached segment">
+    <table class="ui very basic center aligned table">
+      <thead>
+        <tr>
+          <th class="left aligned">文件名</th>
+          <th style="width: 35px">下载</th>
+          
+          <th style="width: 35px">删除</th>
+          
+        </tr>
+      </thead>
+      <tbody>
+        <% if (files) { for (let file of files) { %>
+        <tr>
+          <td class="left aligned"><i class="file icon"></i> <%= file %></td>
+          <td><a style="color: #000; " href="<%= web_util.makeUrl(['api', 'download', article.id, file]) %>"><i class="download icon"></i></a></td>
+          
+            <td><div onclick="deleteFile()"><i class="minus icon"></i></div></td>
+          
+        </tr>
+       
+      <% } } %>
+      </tbody>
+    </table>
+    <form id="form_upload" class="ui form" action="<%= web_util.makeUrl(['api', 'upload', article.id]) %>" method="post" enctype="multipart/form-data">
+      <div class="inline fields">
+        <div class="field" style="margin: 0 auto; ">
+          <label for="album">上传文件（.zip 压缩文件）</label>
+          <input type="file" name="album" id="album">
+          <div class="ui center aligned vertical segment" style="padding-bottom: 0; ">
+            <div class="ui labeled icon blue button" type="submit"><i class="ui edit icon"></i>提交</div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+<% } %>
+<div class="ui segment">
+  <div class="ui form">
+    <div class="field">
+      <label for="title">标题</label>
+      <input type="text" id="title" name="title" value="<%= article.title %>">
+    </div>
+    <div class="field">
+      <label for="title">描述</label>
+      <input type="text" id="description" name="description" value="<%= article.description %>">
+    </div>
+    <div class="field">
+      <label>内容</label>
+      <textarea id='tmp' style="display: none;"><%= article.content %></textarea>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/markdown-palettes@0.4.13/dist/markdown-palettes.css">
+      <script src="https://cdn.jsdelivr.net/npm/markdown-palettes@0.4.13/dist/markdown-palettes.min.js"></script>
+      <div id="editor-container" style="height: 700px;">
+        <div id="editor"></div>
+      </div>
+    </div>
+  </div>
+  <br>
+</div>
+<div style="text-align: center; ">
+  <button id="submit_button" class="ui labeled submit icon button" onclick="javascript:submit(<%= article.id %>)">
+    <i class="icon edit"></i> 发布文章
+  </button>
+
+</div>
+</div>
+
+<script>
+var markdownEditor = new MarkdownPalettes("#editor");
+markdownEditor.content = $('#tmp').val();
+function show_error(error) {
+  swal({
+    title: "文章发布失败。",
+    icon: "error",
+    text: error
+  });
+}
+function success(id) {
+  swal({
+    title: "文章发布成功！",
+    icon: "success"
+  }).then(function () {
+    window.location.href = location.protocol + '//' + location.host + '/article/' + id;
+  });
+}
+function submit(id) {
+  console.log($("#has_contest").is(':checked') ? "Yes" : "No");
+  $.ajax({
+    url: `/article/${id}/edit`,
+    type: 'POST',
+    data: {
+      'title': $('#title').val(),
+      'description': $('#description').val(),
+      'content': markdownEditor.content
+    },
+    async: true,
+    success: function (data) {
+      error_code = data.error_code;
+      switch (error_code) {
+        case 3001:
+          show_error("请登录后继续。");
+          break;
+        case 3002:
+          show_error("标题名不能为空。");
+          break;
+        case 1:
+          success(data.article_id);
+          return;
+        default:
+          show_error("未知错误。" + data.detail);
+          break;
+      }
+    },
+    error: show_error("未知错误")
+  });
+}
+</script>
+
+<%- include('foot') %>

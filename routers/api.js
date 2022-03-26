@@ -43,6 +43,7 @@ router.get('/download/:id/:file', function (req, res) {
 
 router.post('/upload/:id', checklogin, upload.single('album'), function (req, res) {
 	try {
+		console.log(222);
 		res.setHeader('Content-Type', 'application/json');
 		if (!req.file) throw 9001; // 文件未上传
 
@@ -56,6 +57,7 @@ router.post('/upload/:id', checklogin, upload.single('album'), function (req, re
 			res.send(JSON.stringify({ error_code: 9009, detail: err }));
 		});
 	} catch (e) {
+		console.log(e);
 		res.send(JSON.stringify({ error_code: e }));
 	}
 })

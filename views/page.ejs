@@ -1,0 +1,21 @@
+<% this.title=article.title %>
+
+<% let panguMode='disabled' %>
+<%- include('head') %>
+
+<div class="ui segment font-content">
+<h1><%= article.title %></h1>
+<p class="description" style="font-size: 12px;">出版日期 <%= web_util.formatDate(article.create_time) %>；修改日期 <%= web_util.formatDate(article.update_time) %></p>
+
+<% if (user) { %>
+<div style="text-align: right;">
+<a class="ui mini label" href="<%= web_util.makeUrl(['article', article.id, 'edit']) %>">
+  <i class="edit icon"></i>编辑文章
+</a>
+</div>
+<% } %>
+<hr>
+<div style="margin-top: 5px;"><%- article.content %></div>
+
+</div>
+<%- include('foot') %>

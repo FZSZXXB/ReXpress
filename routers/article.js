@@ -2,6 +2,8 @@ let express = require('express');
 let url = require("url");
 let MySQL = require('./mysqldb');
 let md = require('markdown-it')();
+let fs = require("fs");
+let path = require("path");
 let { kill } = require('process');
 //路由对象
 let router = express.Router();
@@ -22,9 +24,9 @@ router.get('/:id/', function (req, res) {
 			if (error)
 				res.render('page', { error_code: 4001 });
 			else {
+				results[0].content = md.render(results[0].content);
 				res.render('page', {
-					title: results[0].title,
-					content: md.render(results[0].content)
+					article: results[0]
 				});
 			}
 		})
@@ -33,14 +35,31 @@ router.get('/:id/', function (req, res) {
 	}
 })
 
+function listFiles(id) {
+	try {
+		let dir = `./data/${id}`;
+		let list = fs.readdirSync(dir);
+		return list;
+	} catch (e) {
+		console.log(e);
+		return null;
+	}
+}
+
 router.get('/:id/edit', checklogin, function (req, res) {
 	try {
+		// console.log(111);
+		res.locals.user = req.session.user;
 		let id = parseInt(req.params.id);
+		let files = listFiles(id);
 		MySQL.query(`SELECT * FROM article WHERE id = ${id}`, function (error, results, fields) {
 			if (results.length === 0) {
-				res.render('edit');
+				res.render('new');
 			} else {
-				res.render('edit', { article: results[0] });
+				res.render('edit', {
+					article: results[0],
+					files: files
+				});
 			}
 		});
 	} catch (e) {
@@ -65,14 +84,14 @@ router.post('/:id/edit', function (req, res) {
 						if (error)
 							res.send(JSON.stringify({ error_code: 3009, detail: error.message }));
 						else
-							throw 1;
+							res.send(JSON.stringify({ error_code: 1, article_id: results[0].id }));
 					});
 				} else {
 					MySQL.query(`UPDATE article SET title="${req.body.title}",update_time=${nowTime},description="${description}",content="${req.body.content}" WHERE id=${id}`, function (error, results, fields) {
 						if (error)
 							res.send(JSON.stringify({ error_code: 3009, detail: error.message }));
 						else
-							throw 1;
+						res.send(JSON.stringify({ error_code: 1, article_id: id }));
 					});
 				}
 			});
