@@ -1,5 +1,5 @@
 <% this.title='首页' %>
-<% let panguMode='disabled' %>
+
 <%- include('head') %>
 <style>
   input[type=text] {
@@ -30,7 +30,7 @@
   <% if (a.description) { %><%= a.description %>
   <% } else { %>暂无描述~<% } %>
 </p>
-<div  style="text-align: right;"><a href="/article/<%= a.id %>">查看更多&nbsp;&nbsp;<i class="fad fa-angle-right fa-fl"></i></a></div>
+<div  style="text-align: right;"><a href="/article/<%= a.id %>">查看更多&nbsp;&nbsp;<i class="fad fa-angle-right fa-fw"></i></a></div>
 
 </div>
 <% }} else { %>

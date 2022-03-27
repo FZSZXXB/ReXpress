@@ -24,7 +24,7 @@ router.get('/:id/', function (req, res) {
 			if (error)
 				res.render('page', { error_code: 4001 });
 			else {
-				results[0].content = md.render(results[0].content);
+				results[0].content = md.render(results[0].content).replace('<table>', '<table class="ui very basic unstackable table">');
 				res.render('page', {
 					article: results[0]
 				});

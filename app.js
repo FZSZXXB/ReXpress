@@ -23,23 +23,27 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
 //接受req.body参数配置
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 //设置session
 app.use(session({
-    secret: 'FzsZdjS0oI_Re4WEphi',
-    name: 'rateboard',
-    saveUninitialized: true,
-    rolling: true,
-    resave: false,
-    cookie: {
-        maxAge: 114514000000,
-        expires: Date.now() + 114514000000
-    }
+	secret: 'FzsZdjS0oI_Re4WEphi',
+	name: 'rateboard',
+	saveUninitialized: true,
+	rolling: true,
+	resave: false,
+	cookie: {
+		maxAge: 114514000000,
+		expires: Date.now() + 114514000000
+	}
 }));
-
+//active
+app.use((req, res, next) => {
+	res.locals.active = req.path.split('/')[1];
+	next();
+});
 //找到routers文件下的index.js导出的函数,传入app
 router(app);
 
 app.listen('8003', function () {
-    console.log("服务器在端口8003启动");
+	console.log("服务器在端口8003启动");
 })

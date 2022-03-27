@@ -8,6 +8,20 @@
 </div>
 </div>
 <script data-cfasync="false" src="<%- lib('semantic-ui/2.4.1/semantic.min.js') %>"></script>
+<script type="text/javascript">
+	function copyText(text) {
+		var $textarea = $('<textarea>');
+		$textarea.text(text);
+		$('body').append($textarea);
+		$textarea.select();
+		document.execCommand('copy');
+		$textarea.remove();
+	}
+	$('body').on('click', '*[data-click-copy]', function () {
+		var text = $(this).attr('data-click-copy');
+		copyText(text);
+	});
+</script>
 </div>
 </body>
 

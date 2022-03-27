@@ -1,7 +1,12 @@
 <% if (article) { this.title = article.title; } else { this.title = "新建文章"; } %>
 
-<% let panguMode='disabled' %>
+
 <%- include('head') %>
+<style>
+  .copy:hover {
+    cursor: pointer;
+  }
+</style>
 <% if (article) { %>
   <h4 class="ui top attached block header"><i class="ui folder icon"></i>文件列表</h4>
   <div class="ui bottom attached segment">
@@ -9,8 +14,8 @@
       <thead>
         <tr>
           <th class="left aligned">文件名</th>
+          <th style="width: 35px">链接</th>
           <th style="width: 35px">下载</th>
-          
           <th style="width: 35px">删除</th>
           
         </tr>
@@ -19,26 +24,22 @@
         <% if (files) { for (let file of files) { %>
         <tr>
           <td class="left aligned"><i class="file icon"></i> <%= file %></td>
-          <td><a style="color: #000; " href="<%= web_util.makeUrl(['api', 'download', article.id, file]) %>"><i class="download icon"></i></a></td>
-          
-            <td><div onclick="deleteFile()"><i class="minus icon"></i></div></td>
+          <td><div class="copy" style="color: #e28989; " onclick="copyText('<%= web_util.makeUrl(['api', 'download', article.id, file]) %>')"><i class="fad fa-clipboard fa-fw"></i></div></td>
+          <td><a style="color: #6cf; " href="<%= web_util.makeUrl(['api', 'download', article.id, file]) %>"><i class="fad fa-download fa-fw"></i></a></td>
+          <td><div style="color: red;" class="copy" onclick="deleteFile(<%= article.id %>, '<%= file %>')"><i class="fad fa-times fa-fw"></i></div></td>
           
         </tr>
        
       <% } } %>
       </tbody>
     </table>
-    <form id="form_upload" class="ui form" action="<%= web_util.makeUrl(['api', 'upload', article.id]) %>" method="post" enctype="multipart/form-data">
-      <div class="inline fields">
-        <div class="field" style="margin: 0 auto; ">
-          <label for="album">上传文件（.zip 压缩文件）</label>
-          <input type="file" name="album" id="album">
-          <div class="ui center aligned vertical segment" style="padding-bottom: 0; ">
-            <div class="ui labeled icon blue button" type="submit"><i class="ui edit icon"></i>提交</div>
-          </div>
-        </div>
-      </div>
+    <form class="ui form" id="uploadForm" enctype="multipart/form-data"> 
+      <label for="file">上传文件（请使用 ZIP 格式）</label>
+      <input type="file" name="file" id="file">
     </form>
+    <div class="ui center aligned vertical segment" style="padding-bottom: 0; ">
+      <div class="ui labeled icon blue button" onclick="uploadFile(<%= article.id %>)"><i class="ui edit icon"></i>提交</div>
+    </div>
   </div>
 <% } %>
 <div class="ui segment">
@@ -74,23 +75,22 @@
 <script>
 var markdownEditor = new MarkdownPalettes("#editor");
 markdownEditor.content = $('#tmp').val();
-function show_error(error) {
+function show_error(title, error) {
   swal({
-    title: "文章发布失败。",
+    title: title + "失败。",
     icon: "error",
     text: error
   });
 }
-function success(id) {
+function success(title, id) {
   swal({
-    title: "文章发布成功！",
+    title: title + "成功！",
     icon: "success"
   }).then(function () {
     window.location.href = location.protocol + '//' + location.host + '/article/' + id;
   });
 }
 function submit(id) {
-  console.log($("#has_contest").is(':checked') ? "Yes" : "No");
   $.ajax({
     url: `/article/${id}/edit`,
     type: 'POST',
@@ -104,20 +104,76 @@ function submit(id) {
       error_code = data.error_code;
       switch (error_code) {
         case 3001:
-          show_error("请登录后继续。");
+          show_error("文章发布", "请登录后继续。");
           break;
         case 3002:
-          show_error("标题名不能为空。");
+          show_error("文章发布", "标题名不能为空。");
           break;
         case 1:
-          success(data.article_id);
+          success("文章发布", data.article_id);
           return;
         default:
-          show_error("未知错误。" + data.detail);
+          show_error("文章发布", "未知错误。" + data.detail);
           break;
       }
     },
-    error: show_error("未知错误")
+    error: show_error("文章发布", "您与服务器断开连接。")
+  });
+}
+function deleteFile(id, filename) {
+  $.ajax({
+    url: `/api/delete/${id}/${filename}`,
+    type: 'POST',
+    async: true,
+    success: function (data) {
+      error_code = data.error_code;
+      switch (error_code) {
+        case 9001:
+          show_error("删除", "操作不合法。");
+          break;
+        case 9002:
+          show_error("删除", data.detail);
+          break;
+        case 1:
+          success("删除", id + '/edit');
+          return;
+        default:
+          show_error("删除", error_code);
+          break;
+      }
+    },
+    error: show_error("删除", "您与服务器断开连接。")
+  });
+}
+function uploadFile(id) {
+  var formData = new FormData($('#uploadForm')[0]); 
+  $.ajax({
+    url: `/api/upload/${id}`,
+    type: 'POST',
+    data: formData,
+    async: true,
+    contentType: false,
+    // 告诉jQuery不要去设置Content-Type请求头
+    processData: false,
+    // 告诉jQuery不要去处理发送的数据
+    success: function (data) {
+      error_code = data.error_code;
+      switch (error_code) {
+        case 9001:
+          show_error("文件上传", "未选择文件。");
+          break;
+        case 9002:
+          show_error("文件上传", "文件格式不正确。请使用 ZIP 格式。");
+          break;
+        case 1:
+          success("文件上传", id + '/edit');
+          return;
+        default:
+          show_error("文件上传", `${data.detail}`);
+          break;
+      }
+    },
+    error: show_error("文件上传", "您与服务器断开连接。")
   });
 }
 </script>

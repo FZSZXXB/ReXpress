@@ -1,3 +1,7 @@
+# Data
+data/
+tmp/
+
 # Logs
 logs
 *.log
