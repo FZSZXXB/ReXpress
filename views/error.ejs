@@ -1,0 +1,15 @@
+<% this.title = "错误" %>
+
+<%- include('head') %>
+
+<script>
+  swal({
+    title: "一个以外的事情发生了~",
+    icon: "error",
+    text: "错误代码：<%= error_code %>。\n请联系福州三中信息技术部开发组获取帮助。"
+  }).then(function () {
+    window.location.href = location.protocol + '//' + location.host;
+  });
+</script>
+
+<%- include('foot') %>

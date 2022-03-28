@@ -1,5 +1,7 @@
-<% if (article) { this.title = article.title; } else { this.title = "新建文章"; } %>
-
+<%
+if ('undefined' != typeof article) { this.title = article.title; }
+else { this.title = "新建文章"; }
+%>
 
 <%- include('head') %>
 <style>
@@ -7,7 +9,7 @@
     cursor: pointer;
   }
 </style>
-<% if (article) { %>
+<% if ('undefined' != typeof article) { %>
   <h4 class="ui top attached block header"><i class="ui folder icon"></i>文件列表</h4>
   <div class="ui bottom attached segment">
     <table class="ui very basic center aligned table">
@@ -24,7 +26,7 @@
         <% if (files) { for (let file of files) { %>
         <tr>
           <td class="left aligned"><i class="file icon"></i> <%= file %></td>
-          <td><div class="copy" style="color: #e28989; " onclick="copyText('<%= web_util.makeUrl(['api', 'download', article.id, file]) %>')"><i class="fad fa-clipboard fa-fw"></i></div></td>
+          <td><div class="copy" style="color: #fdd72d; " onclick="copyText('<%= web_util.makeUrl(['api', 'download', article.id, file]) %>')"><i class="fad fa-clipboard fa-fw"></i></div></td>
           <td><a style="color: #6cf; " href="<%= web_util.makeUrl(['api', 'download', article.id, file]) %>"><i class="fad fa-download fa-fw"></i></a></td>
           <td><div style="color: red;" class="copy" onclick="deleteFile(<%= article.id %>, '<%= file %>')"><i class="fad fa-times fa-fw"></i></div></td>
           
@@ -46,17 +48,17 @@
   <div class="ui form">
     <div class="field">
       <label for="title">标题</label>
-      <input type="text" id="title" name="title" value="<%= article.title %>">
+      <input type="text" id="title" name="title" value="<%= 'undefined' == typeof article ? '' : article.title %>">
     </div>
     <div class="field">
       <label for="title">描述</label>
-      <input type="text" id="description" name="description" value="<%= article.description %>">
+      <input type="text" id="description" name="description" value="<%= 'undefined' == typeof article ? '' : article.description %>">
     </div>
     <div class="field">
       <label>内容</label>
-      <textarea id='tmp' style="display: none;"><%= article.content %></textarea>
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/markdown-palettes@0.4.13/dist/markdown-palettes.css">
-      <script src="https://cdn.jsdelivr.net/npm/markdown-palettes@0.4.13/dist/markdown-palettes.min.js"></script>
+      <textarea id='tmp' style="display: none;"><%= 'undefined' == typeof article ? '' : article.content %></textarea>
+      <link rel="stylesheet" href="/css/markdown-palettes.css">
+      <script src="/js/markdown-palettes.min.js"></script>
       <div id="editor-container" style="height: 700px;">
         <div id="editor"></div>
       </div>
@@ -65,7 +67,7 @@
   <br>
 </div>
 <div style="text-align: center; ">
-  <button id="submit_button" class="ui labeled submit icon button" onclick="javascript:submit(<%= article.id %>)">
+  <button id="submit_button" class="ui labeled submit icon button" onclick="javascript:submit(<%= 'undefined' == typeof article ? 0 : article.id %>)">
     <i class="icon edit"></i> 发布文章
   </button>
 
@@ -73,6 +75,8 @@
 </div>
 
 <script>
+// the loader html
+// var sweet_loader = '<div class="sweet_loader"><svg viewBox="0 0 140 140" width="140" height="140"><g class="outline"><path d="m 70 28 a 1 1 0 0 0 0 84 a 1 1 0 0 0 0 -84" stroke="rgba(0,0,0,0.1)" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></g><g class="circle"><path d="m 70 28 a 1 1 0 0 0 0 84 a 1 1 0 0 0 0 -84" stroke="#71BBFF" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-dashoffset="200" stroke-dasharray="300"></path></g></svg></div>';
 var markdownEditor = new MarkdownPalettes("#editor");
 markdownEditor.content = $('#tmp').val();
 function show_error(title, error) {
@@ -121,29 +125,46 @@ function submit(id) {
   });
 }
 function deleteFile(id, filename) {
-  $.ajax({
-    url: `/api/delete/${id}/${filename}`,
-    type: 'POST',
-    async: true,
-    success: function (data) {
-      error_code = data.error_code;
-      switch (error_code) {
-        case 9001:
-          show_error("删除", "操作不合法。");
-          break;
-        case 9002:
-          show_error("删除", data.detail);
-          break;
-        case 1:
-          success("删除", id + '/edit');
-          return;
-        default:
-          show_error("删除", error_code);
-          break;
+  swal({
+    title: "删除",
+    icon: "warning",
+    text: `你确定要删除 ${filename} 吗？`,
+    dangerMode: true,
+    buttons: {
+      cancel: "取消",
+      confirm: {
+        text: "确定",
+        closeModal: false,
       }
-    },
-    error: show_error("删除", "您与服务器断开连接。")
-  });
+    }
+  }).then((value) => {
+    if (value) {
+      $.ajax({
+        url: `/api/delete/${id}/${filename}`,
+        type: 'POST',
+        async: true,
+        success: function (data) {
+          error_code = data.error_code;
+          switch (error_code) {
+            case 9001:
+              show_error("删除", "操作不合法。");
+              break;
+            case 9002:
+              show_error("删除", data.detail);
+              break;
+            case 1:
+              success("删除", id + '/edit');
+              return;
+            default:
+              show_error("删除", error_code);
+              break;
+          }
+        },
+        error: show_error("删除", "您与服务器断开连接。")
+      });
+    } else { swal.close(); }
+  })
+  
 }
 function uploadFile(id) {
   var formData = new FormData($('#uploadForm')[0]); 

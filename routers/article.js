@@ -22,16 +22,20 @@ router.get('/:id/', function (req, res) {
 		let id = parseInt(req.params.id);
 		MySQL.query(`SELECT * FROM article WHERE id = ${id}`, function (error, results, fields) {
 			if (error)
-				res.render('page', { error_code: 4001 });
+				res.render('error', { error_code: 4002 });
 			else {
+				let readTime = results[0].content.length / 400;
+				readTime = Math.round(readTime);
+				if (readTime < 1) readTime = 1;
 				results[0].content = md.render(results[0].content).replace('<table>', '<table class="ui very basic unstackable table">');
 				res.render('page', {
+					readTime: readTime,
 					article: results[0]
 				});
 			}
 		})
 	} catch (e) {
-		res.render('page', { error_code: 4002 });
+		res.render('error', { error_code: 4002 });
 	}
 })
 
@@ -51,11 +55,11 @@ router.get('/:id/edit', checklogin, function (req, res) {
 		// console.log(111);
 		res.locals.user = req.session.user;
 		let id = parseInt(req.params.id);
-		let files = listFiles(id);
 		MySQL.query(`SELECT * FROM article WHERE id = ${id}`, function (error, results, fields) {
 			if (results.length === 0) {
-				res.render('new');
+				res.render('edit');
 			} else {
+				let files = listFiles(id);
 				res.render('edit', {
 					article: results[0],
 					files: files
@@ -74,17 +78,18 @@ router.post('/:id/edit', function (req, res) {
 			throw 3001; // 未经授权
 		else {
 			let id = parseInt(req.params.id);
+			console.log("id = " + id);
 			if (req.body.title.length === 0) throw 3002; // 标题无效
 			MySQL.query(`SELECT * FROM article WHERE id = ${id}`, function (error, results, fields) {
 				let nowTime = web_util.getCurrentDate(true);
 				let description = req.body.description;
 				if (results.length === 0) {
 					MySQL.query(`INSERT INTO article(title,create_time,update_time,description,content) \
-										VALUES("${req.body.title}",${nowTime},${nowTime},"${description}","${req.body.content}")`, function (error, results, fields) {
+										VALUES("${req.body.title}",${nowTime},${nowTime},"${description}","${req.body.content}")`, function (error, rows) {
 						if (error)
 							res.send(JSON.stringify({ error_code: 3009, detail: error.message }));
-						else
-							res.send(JSON.stringify({ error_code: 1, article_id: results[0].id }));
+						else 
+							res.send(JSON.stringify({ error_code: 1, article_id: rows.insertId }));
 					});
 				} else {
 					MySQL.query(`UPDATE article SET title="${req.body.title}",update_time=${nowTime},description="${description}",content="${req.body.content}" WHERE id=${id}`, function (error, results, fields) {

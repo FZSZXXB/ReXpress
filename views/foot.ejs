@@ -1,7 +1,10 @@
 </div>
 <div class="ui vertical footer segment" style="margin-top: 15px; ">
 	<div class="ui center aligned container">
-		<span style="color: #999;">
+		<span style="color: #999999;">
+			三叶虫校刊网 基于开源项目 <span style="color: #000 !important"><i class="fab fa-github fa-fw"></i><a style="color: #000 !important" href="https://github.com/FZSZXXB/newspaper">Newspaper Platform</a></span>。</span>
+		<br>
+		<span style="color: #999999;">
 			2022 ❤️ 福州三中三叶虫编辑部 | 福州三中信息技术部</span>
 		</span>
 	</div>
@@ -16,6 +19,11 @@
 		$textarea.select();
 		document.execCommand('copy');
 		$textarea.remove();
+		swal({
+			title: "复制",
+			icon: "success",
+			text: "内容已复制到剪贴板。"
+		});
 	}
 	$('body').on('click', '*[data-click-copy]', function () {
 		var text = $(this).attr('data-click-copy');

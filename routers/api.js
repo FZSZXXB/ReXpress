@@ -28,7 +28,15 @@ let upload = multer({
 	})
 });
 
-//文章内容页面
+router.get('/error/:error_code', function (req, res) {
+	try {
+		res.locals.user = req.session.user;
+		res.render('error', { error_code: parseInt(req.params.error_code) });
+	} catch (e) {
+		console.log(e);
+	}
+})
+
 router.get('/download/:id/:file', function (req, res) {
 	try {
 		let id = parseInt(req.params.id);

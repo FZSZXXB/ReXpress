@@ -1,5 +1,10 @@
-<% this.title='首页' %>
-
+<% this.title='归档' %>
+<%
+function getyear (time) {
+  let str = web_util.formatDate(time);
+  return str.split('-')[0];
+}
+%>
 <%- include('head') %>
 <style>
   input[type=text] {
@@ -23,23 +28,18 @@
     transition: color .1s ease,border-color .1s ease;
 }
 </style>
-<% if (user) { %>
-<div style="text-align: right;">
-  <a class="ui pink labeled icon button" href="<%= web_util.makeUrl(['article', 0, 'edit']) %>">
-    <i class="plus icon"></i>新建文章
-  </a>
-</div>
-  <% } %>
-<% if (articles.length) { for (let a of articles) { %>
-<div class="ui segment">
-<a href="/article/<%= a.id %>"><h2><%= a.title %></h2></a>
-<p class="description">
-  <% if (a.description) { %><%= a.description %>
-  <% } else { %>暂无描述~<% } %>
-</p>
-<div  style="text-align: right;"><a href="/article/<%= a.id %>">查看更多<i class="fad fa-angle-right fa-fw"></i></a></div>
+<% if (articles.length) {
+  let lastYear = '2077';
 
-</div>
+  for (let a of articles) {
+    let thisyear = getyear(a.create_time);
+    if (thisyear != lastYear) { %>
+      <h2><%= thisyear %></h2>
+      <% lastYear = thisyear; %>
+    <% } %>
+      <div class="ui segment">
+      <a href="/article/<%= a.id %>"><h4><%= a.title %></h4></a>
+      </div>
 <% }} else { %>
 <div class="ui placeholder segment">
   <div class="ui icon header">

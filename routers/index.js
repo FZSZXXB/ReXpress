@@ -22,7 +22,18 @@ module.exports = function (app) {
 		}
 	});
 
-	
+	app.get('/archives', function (req, res) {
+		try {
+			res.locals.user = req.session.user;
+			MySQL.query(`SELECT * FROM article ORDER BY article.create_time DESC`, function (error, results, fields) {
+				if (error) throw error;
+				res.render("archives", { articles: results });
+			})
+		} catch (e) {
+			console.log(e);
+			// res.render('error', { err: e });
+		}
+	});
 
 	app.use('/registerPage', Register);
 	app.use('/loginPage', Login);
