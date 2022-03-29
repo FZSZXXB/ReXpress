@@ -5,7 +5,6 @@ const connection = require('./mysqldb');
 const Api = require('./api');
 const url = require("url");
 const fs = require("fs");
-const { min } = require('moment');
 
 module.exports = function (app) {
 	// 路由挂载
