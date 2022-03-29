@@ -1,6 +1,6 @@
 let express = require('express');
 let url = require("url");
-let MySQL = require('./mysqldb');
+let connection = require('./mysqldb');
 let md = require('markdown-it')();
 let fs = require("fs");
 let path = require("path");
@@ -20,7 +20,7 @@ router.get('/:id/', function (req, res) {
 	try {
 		res.locals.user = req.session.user;
 		let id = parseInt(req.params.id);
-		MySQL.query(`SELECT * FROM article WHERE id = ${id}`, function (error, results, fields) {
+		connection.query(`SELECT * FROM article WHERE id = ${id}`, function (error, results, fields) {
 			if (error)
 				res.render('error', { error_code: 4002 });
 			else {
@@ -28,7 +28,7 @@ router.get('/:id/', function (req, res) {
 				readTime = Math.round(readTime);
 				if (readTime < 1) readTime = 1;
 				results[0].content = md.render(results[0].content).replace('<table>', '<table class="ui very basic unstackable table">');
-				res.render('page', {
+				res.render('article', {
 					readTime: readTime,
 					article: results[0]
 				});
@@ -55,7 +55,7 @@ router.get('/:id/edit', checklogin, function (req, res) {
 		// console.log(111);
 		res.locals.user = req.session.user;
 		let id = parseInt(req.params.id);
-		MySQL.query(`SELECT * FROM article WHERE id = ${id}`, function (error, results, fields) {
+		connection.query(`SELECT * FROM article WHERE id = ${id}`, function (error, results, fields) {
 			if (results.length === 0) {
 				res.render('edit');
 			} else {
@@ -80,11 +80,11 @@ router.post('/:id/edit', function (req, res) {
 			let id = parseInt(req.params.id);
 			console.log("id = " + id);
 			if (req.body.title.length === 0) throw 3002; // 标题无效
-			MySQL.query(`SELECT * FROM article WHERE id = ${id}`, function (error, results, fields) {
+			connection.query(`SELECT * FROM article WHERE id = ${id}`, function (error, results, fields) {
 				let nowTime = web_util.getCurrentDate(true);
 				let description = req.body.description;
 				if (results.length === 0) {
-					MySQL.query(`INSERT INTO article(title,create_time,update_time,description,content) \
+					connection.query(`INSERT INTO article(title,create_time,update_time,description,content) \
 										VALUES("${req.body.title}",${nowTime},${nowTime},"${description}","${req.body.content}")`, function (error, rows) {
 						if (error)
 							res.send(JSON.stringify({ error_code: 3009, detail: error.message }));
@@ -92,7 +92,7 @@ router.post('/:id/edit', function (req, res) {
 							res.send(JSON.stringify({ error_code: 1, article_id: rows.insertId }));
 					});
 				} else {
-					MySQL.query(`UPDATE article SET title="${req.body.title}",update_time=${nowTime},description="${description}",content="${req.body.content}" WHERE id=${id}`, function (error, results, fields) {
+					connection.query(`UPDATE article SET title="${req.body.title}",update_time=${nowTime},description="${description}",content="${req.body.content}" WHERE id=${id}`, function (error, results, fields) {
 						if (error)
 							res.send(JSON.stringify({ error_code: 3009, detail: error.message }));
 						else
@@ -110,7 +110,7 @@ router.post('/:id/delete', function (req, res) {
 	try {
 		res.setHeader('Content-Type', 'application/json');
 		let id = parseInt(req.params.id);
-		MySQL.query(`delete from article where id=${id}`, function (error, results, fields) {
+		connection.query(`delete from article where id=${id}`, function (error, results, fields) {
 			if (error) throw error.message;
 			else {
 				fs.unlink(path.join('data', id), function (err) {

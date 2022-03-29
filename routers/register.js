@@ -1,7 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const crypto = require('crypto');
-const MySQL = require('./mysqldb');
+const connection = require('./mysqldb');
 const url = require("url");
 const path = require('path');
 //路由对象
@@ -37,7 +37,7 @@ router.post('/register', function (req, res) {
 		let userInfo = req.body;
 		if (userInfo.username == '' || userInfo.password == '') res.send(JSON.stringify({ error_code: 1001 }));
 		let encryption = crypto.createHmac('sha256', 'jie').update(userInfo.password).digest('hex');
-		MySQL.query(`INSERT into user(username,password) VALUES("${userInfo.username}","${encryption}")`, function (error, results, fields) {
+		connection.query(`INSERT into user(username,password) VALUES("${userInfo.username}","${encryption}")`, function (error, results, fields) {
 			if (error) res.send(JSON.stringify({ error_code: 1001 }));
 			else res.send(JSON.stringify({ error_code: 1 }));
 		});

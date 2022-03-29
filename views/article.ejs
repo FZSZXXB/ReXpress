@@ -1,0 +1,16 @@
+<%- include('head') %>
+
+<div class="ui segment font-content">
+<% if (user) { %>
+<a class="ui right floated pink labeled icon button" href="<%= web_util.makeUrl(['article', article.id, 'edit']) %>">
+  <i class="edit icon"></i>编辑文章
+</a>
+<% } %>
+<h1><%= article.title %></h1>
+<p class="description" style="display: inline;">
+  <i class="fal fa-calendar fa-fw"></i>&nbsp;&nbsp;<%= web_util.formatDate(article.create_time) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fal fa-calendar-plus fa-fw"></i>&nbsp;&nbsp;<%= web_util.formatDate(article.update_time) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fal fa-clock"></i>&nbsp;&nbsp;<%= readTime %> 分钟读完
+</p>
+<div style="margin-top: 5px;"><%- article.content %></div>
+
+</div>
+<%- include('foot') %>

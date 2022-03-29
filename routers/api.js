@@ -1,6 +1,6 @@
 const express = require('express');
 const url = require("url");
-const MySQL = require('./mysqldb');
+const connection = require('./mysqldb');
 const fs = require("fs");
 const path = require("path");
 const multer = require('multer');

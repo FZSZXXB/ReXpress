@@ -38,7 +38,11 @@ function key_login(event) {
 	}
 }
 function show_error(error) {
-	alert(error);
+	swal({
+    title: "登录失败。",
+    icon: "error",
+    text: error
+  });
 }
 function success(session_id) {
 	window.location.href = location.protocol + '//' + location.host + <%- serializejs('/') %>;

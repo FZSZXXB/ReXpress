@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const router = require('./routers');
 const serializejs = require('serialize-javascript');
-const MySQL = require('./routers/mysqldb');
+const connection = require('./routers/mysqldb');
 
 global.web_util = require('./utils');
 
@@ -39,6 +39,8 @@ app.use(session({
 //active
 app.use((req, res, next) => {
 	res.locals.active = req.path.split('/')[1];
+	res.locals.req = req;
+	res.locals.res = res;
 	next();
 });
 //找到routers文件下的index.js导出的函数,传入app
