@@ -60,8 +60,8 @@ function login() {
 		success: function(data) {
 			error_code = data.error_code;
 			switch (error_code) {
-				case 1001:
-					show_error("登陆失败。");
+				case 2001:
+					show_error("用户名或密码不正确。");
 					break;
 				case 1:
 					success(data.session_id);

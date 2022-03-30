@@ -29,6 +29,19 @@
 		var text = $(this).attr('data-click-copy');
 		copyText(text);
 	});
+	$(function () {
+		$('.ui.dropdown:not(.simple)').dropdown();
+	});
+	
+$('#helpMusicId').popup({
+	title : '获取音乐 ID',
+  content : '音乐 ID 通常可以从网页版的链接中获取，如 https://music.163.com/#/song?id=1400761054。'
+});
+$('#helpReadTime').popup({
+	title : '阅读时长统计',
+  content : '阅读时长根据字数自动计算，没有考虑图片的阅读时间'
+});
+$(".js_gallery_evaluate").fancybox();
 </script>
 </div>
 </body>

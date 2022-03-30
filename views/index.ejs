@@ -32,7 +32,8 @@
   <% } %>
 <% if (articles.length) { for (let a of articles) { %>
 <div class="ui segment">
-<a href="/article/<%= a.id %>"><h2><%= a.title %></h2></a>
+  <div class="post-head"><a class="post-title" href="/article/<%= a.id %>"><h2 class="post-title-link"><%= a.title %></h2></a></div>
+
 <p class="description">
   <% if (a.description) { %><%= a.description %>
   <% } else { %>暂无描述~<% } %>

@@ -11,6 +11,22 @@ else { this.title = "新建文章"; }
 </style>
 <% if ('undefined' != typeof article) { %>
   <h4 class="ui top attached block header"><i class="ui folder icon"></i>文件列表</h4>
+  <textarea id="fileListTmp" style="display: none;">
+    <% if (files) { %>
+&gt;&nbsp;点击图片进入阅览模式~
+<%
+    let pdfFile = '';
+    for (let file of files) {
+      let extName = file.substr(file.lastIndexOf('.') + 1)
+      if (extName == 'jpg' || extName == 'png') { %>
+![](<%= web_util.makeUrl(['api', 'download', article.id, file]) %>)
+      <% } else if (extName == 'pdf') pdfFile = file;
+    } 
+    if (pdfFile.length > 0) { %>
+[PDF 文件下载](<%= web_util.makeUrl(['api', 'download', article.id, pdfFile]) %>)
+    <% }
+    } %>
+  </textarea>
   <div class="ui bottom attached segment">
     <table class="ui very basic center aligned table">
       <thead>
@@ -41,6 +57,7 @@ else { this.title = "新建文章"; }
     </form>
     <div class="ui center aligned vertical segment" style="padding-bottom: 0; ">
       <div class="ui labeled icon blue button" onclick="uploadFile(<%= article.id %>)"><i class="ui edit icon"></i>提交</div>
+      <div class="ui labeled icon pink button" onclick="writeAlbum()"><i class="ui lightning icon"></i>一键生成相册</div>
     </div>
   </div>
 <% } %>
@@ -51,8 +68,27 @@ else { this.title = "新建文章"; }
       <input type="text" id="title" name="title" value="<%= 'undefined' == typeof article ? '' : article.title %>">
     </div>
     <div class="field">
-      <label for="title">描述</label>
+      <label for="title">描述（可选）</label>
       <input type="text" id="description" name="description" value="<%= 'undefined' == typeof article ? '' : article.description %>">
+    </div>
+    
+    <div class="ui two column very relaxed grid">
+      <div class="column field">
+        <label for="music_server">选择音乐服务</label>
+        <select class="ui dropdown" name="music_server" id="music_server">
+          <option value="" <%= 'undefined' == typeof article ? 'selected' : (article.music_server == '' ? 'selected' : '') %>>无服务</option>
+          <option value="netease" <%= 'undefined' == typeof article ? '' : (article.music_server == 'netease' ? 'selected' : '') %>>网易云音乐</option>
+          <option value="tencent" <%= 'undefined' == typeof article ? '' : (article.music_server == 'tencent' ? 'selected' : '') %>>QQ 音乐</option>
+          <option value="kugou" <%= 'undefined' == typeof article ? '' : (article.music_server == 'kugou' ? 'selected' : '') %>>酷狗音乐</option>
+          <option value="baidu" <%= 'undefined' == typeof article ? '' : (article.music_server == 'baidu' ? 'selected' : '') %>>千千音乐</option>
+        </select>
+      </div>
+      <div class="column field">
+        <label for="music_id">音乐 ID</label>
+        <div class="inline field">
+          <input type="text" id="music_id" name="music_id" value="<%= 'undefined' == typeof article ? '' : article.music_id %>"><button class="ui circular label" id="helpMusicId">?</button>
+        </div>
+      </div>
     </div>
     <div class="field">
       <label>内容</label>
@@ -101,7 +137,9 @@ function submit(id) {
     data: {
       'title': $('#title').val(),
       'description': $('#description').val(),
-      'content': markdownEditor.content
+      'content': markdownEditor.content,
+      'music_server': $("#music_server").val(),
+      'music_id': $('#music_id').val()
     },
     async: true,
     success: function (data) {
@@ -117,7 +155,7 @@ function submit(id) {
           success("文章发布", data.article_id);
           return;
         default:
-          show_error("文章发布", "未知错误。" + data.detail);
+          show_error("文章发布", data.detail);
           break;
       }
     },
@@ -196,6 +234,28 @@ function uploadFile(id) {
     },
     error: show_error("文件上传", "您与服务器断开连接。")
   });
+
+}
+function writeAlbum() {
+  if (markdownEditor.content.length > 0) {
+    swal({
+      title: "检测到编辑器中存在内容",
+      icon: "warning",
+      text: `你确定要覆盖原始内容并重新生成吗？`,
+      buttons: {
+        cancel: "取消",
+        confirm: {
+          text: "确定",
+          closeModal: false,
+        }
+      }
+    }).then (value => {
+      if (value) {
+        markdownEditor.content = $('#fileListTmp').val();
+        submit(<%= article.id %>);
+      }
+    })
+  } else markdownEditor.content = $('#fileListTmp').val();
 }
 </script>
 

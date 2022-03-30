@@ -1,16 +1,40 @@
-<%- include('head') %>
+<% this.title= article.title %>
 
+<%- include('head') %>
+<link href="https://cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.css" rel="stylesheet">
+<script src="https://cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.js"></script>
 <div class="ui segment font-content">
 <% if (user) { %>
 <a class="ui right floated pink labeled icon button" href="<%= web_util.makeUrl(['article', article.id, 'edit']) %>">
   <i class="edit icon"></i>编辑文章
 </a>
 <% } %>
-<h1><%= article.title %></h1>
-<p class="description" style="display: inline;">
-  <i class="fal fa-calendar fa-fw"></i>&nbsp;&nbsp;<%= web_util.formatDate(article.create_time) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fal fa-calendar-plus fa-fw"></i>&nbsp;&nbsp;<%= web_util.formatDate(article.update_time) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fal fa-clock"></i>&nbsp;&nbsp;<%= readTime %> 分钟读完
+<h1><%= article.title %></h1>  
+<p class="description">
+  <i class="fal fa-calendar fa-fw"></i>&nbsp;&nbsp;<%= web_util.formatDate(article.create_time) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fal fa-calendar-plus fa-fw"></i>&nbsp;&nbsp;<%= web_util.formatDate(article.update_time) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fal fa-hourglass-half fa-fw"></i>&nbsp;&nbsp;<%= readTime %> 分钟读完 <button class="ui circular label" id="helpReadTime">?</button>
 </p>
+
 <div style="margin-top: 5px;"><%- article.content %></div>
 
 </div>
+<% if (article.music_server) { %>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
+<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/meting@2.0.1/dist/Meting.min.js"></script>
+<div>
+<meting-js 
+  server="<%= article.music_server %>" 
+  type="song" 
+  id="<%= article.music_id %>"
+  fixed="true"
+  autoplay="true"
+  loop="all"
+  order="random"
+  preload="auto"
+  list-folded="ture"
+  list-max-height="500px"
+  lrc-type="1">
+</meting-js>	
+</div>
+<% } %>
 <%- include('foot') %>

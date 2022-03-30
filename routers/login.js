@@ -22,7 +22,7 @@ router.post('/login', function (req, res) {
 		res.setHeader('Content-Type', 'application/json');
 		let encryption = crypto.createHmac('sha256', 'jie').update(req.body.password).digest('hex');
 		connection.query(`select * from user where username = "${req.body.username}" and password = "${encryption}"`, function (error, results, fields) {
-			if (error) throw 2001;
+			if (error) throw 2002;
 			if (results.length >= 1) {
 				req.session.user = {
 					id: results[0].user_id,
@@ -36,7 +36,7 @@ router.post('/login', function (req, res) {
 		})
 	} catch (e) {
 		syzoj.log(e);
-		res.send(JSON.stringify({ error_code: 2002 }));
+		res.send(JSON.stringify({ error_code: e }));
 	}
 })
 //退出登录

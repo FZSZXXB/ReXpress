@@ -35,15 +35,19 @@ router.post('/register', function (req, res) {
 	try {
 		res.setHeader('Content-Type', 'application/json');
 		let userInfo = req.body;
-		if (userInfo.username == '' || userInfo.password == '') res.send(JSON.stringify({ error_code: 1001 }));
+		var reg = '/[^a-zA-Z0-9]+/';
+		if (userInfo.username.match(reg)) throw 1001;
+		if (userInfo.username.length < 2) throw 1002;
+		if (userInfo.username.length > 10) throw 1003;
+		if (userInfo.password.length < 6) throw 1004;
 		let encryption = crypto.createHmac('sha256', 'jie').update(userInfo.password).digest('hex');
 		connection.query(`INSERT into user(username,password) VALUES("${userInfo.username}","${encryption}")`, function (error, results, fields) {
-			if (error) res.send(JSON.stringify({ error_code: 1001 }));
+			if (error) res.send(JSON.stringify({ error_code: 1005 }));
 			else res.send(JSON.stringify({ error_code: 1 }));
 		});
 	} catch (e) {
 		syzoj.log(e);
-		res.send(JSON.stringify({ error_code: 1002 }));
+		res.send(JSON.stringify({ error_code: e }));
 	}
 })
 //导出路由对象

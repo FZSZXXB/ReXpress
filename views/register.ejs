@@ -23,11 +23,20 @@
 </div>
 <script type="text/javascript">
 	function show_error(error) {
-		alert(error);
+		swal({
+    title: "注册失败。",
+    icon: "error",
+    text: error
+  });
 	}
 	function success() {
-		alert("注册成功！");
-		window.location.href = location.protocol + '//' + location.host + <%- serializejs('/') %>;
+		swal({
+			title: "注册成功！",
+			icon: "success",
+			text: "欢迎你，" + $("#username").val() + "！"
+		}).then(function () {
+			window.location.href = location.protocol + '//' + location.host + <%- serializejs('/') %>;
+		});
 	}
 	function submit() {
 		if ($("#password1").val() != $("#password2").val()) {
@@ -47,12 +56,23 @@
 				var done = false;
 				error_code = data.error_code;
 				switch (error_code) {
-					case 2001:
-						show_error("注册失败。");
+					case 1001:
+						show_error("用户名只允许包含大小写英文字母、数字。");
+						break;
+					case 1002:
+						show_error("用户名太短。");
+						break;
+					case 1003:
+						show_error("用户名太短。");
+						break;
+					case 1004:
+						show_error("密码太短。");
+						break;
+					case 1005:
+						show_error("用户已存在。");
 						break;
 					case 1:
 						success();
-						done = true;
 						break;
 					default:
 						show_error("未知错误：" + JSON.stringify(data));
