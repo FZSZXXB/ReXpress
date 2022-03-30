@@ -35,7 +35,7 @@ router.post('/login', function (req, res) {
 			}
 		})
 	} catch (e) {
-		syzoj.log(e);
+		console.log(e);
 		res.send(JSON.stringify({ error_code: e }));
 	}
 })

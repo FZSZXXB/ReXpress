@@ -46,7 +46,7 @@ router.post('/register', function (req, res) {
 			else res.send(JSON.stringify({ error_code: 1 }));
 		});
 	} catch (e) {
-		syzoj.log(e);
+		console.log(e);
 		res.send(JSON.stringify({ error_code: e }));
 	}
 })

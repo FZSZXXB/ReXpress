@@ -35,15 +35,15 @@
 				<div class="ui simple dropdown item">
 					<span class="user" style="margin-right: 5px;"><%= user.username %></span><i class="fad fa-angle-down"></i>
 					<div class="menu">
-						<a class="item" href="<%= web_util.makeUrl(['loginPage', 'logout'], { url: '/' }) %>"><i class="fad fa-power-off"></i>注销</a>
+						<a class="item" href="<%= web_util.makeUrl(['loginPage', 'logout'], { url: req.query['url'] || req.originalUrl }) %>"><i class="fad fa-power-off"></i>注销</a>
 					</div>
 				</div>
 				<% } else { %>
 				<div class="item">
-					<a class="ui button" style="margin-right: 0.5em; " href="<%= web_util.makeUrl(['loginPage'], { url: '/' }) %>">
+					<a class="ui button" style="margin-right: 0.5em; " href="<%= web_util.makeUrl(['loginPage'], { url: req.query['url'] || req.originalUrl }) %>">
 						登录
 					</a>
-					<a class="ui primary button" href="<%= web_util.makeUrl(['registerPage'], { url: '/' }) %>">
+					<a class="ui primary button" href="<%= web_util.makeUrl(['registerPage'], { url: req.query['url'] || req.originalUrl }) %>">
 						注册
 					</a>
 				</div>

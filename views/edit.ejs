@@ -236,6 +236,7 @@ function uploadFile(id) {
   });
 
 }
+<% if ('undefined' != typeof article) { %>
 function writeAlbum() {
   if (markdownEditor.content.length > 0) {
     swal({
@@ -257,6 +258,7 @@ function writeAlbum() {
     })
   } else markdownEditor.content = $('#fileListTmp').val();
 }
+<% } %>
 </script>
 
 <%- include('foot') %>
