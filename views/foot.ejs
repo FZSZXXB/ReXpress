@@ -41,7 +41,14 @@ $('#helpReadTime').popup({
 	title : '阅读时长统计',
   content : '阅读时长根据字数自动计算，没有考虑图片的阅读时间'
 });
-$(".js_gallery_evaluate").fancybox();
+$(function () {
+	var $g = $(".js_gallery_evaluate");
+	if ($g.length > 0)
+		$g.fancybox();
+});
+$(".mobile.start").on('click', function () {
+	$('.ui.mobile.sidebar').sidebar('toggle');
+})
 </script>
 </div>
 </body>

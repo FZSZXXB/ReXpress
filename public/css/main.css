@@ -36,6 +36,11 @@
   ::-webkit-scrollbar-thumb {
     all: unset !important;
   }
+  .desktop { display: none !important; }
+}
+
+@media all and (min-width: 768px) {
+  .mobile { display: none !important; }
 }
 
 #web_bg{
