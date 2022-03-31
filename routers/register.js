@@ -35,8 +35,8 @@ router.post('/register', function (req, res) {
 	try {
 		res.setHeader('Content-Type', 'application/json');
 		let userInfo = req.body;
-		var reg = '/[^a-zA-Z0-9]+/';
-		if (userInfo.username.match(reg)) throw 1001;
+		let reg = new RegExp('[^a-zA-Z0-9]+');
+		if (reg.test(userInfo.username)) throw 1001;
 		if (userInfo.username.length < 2) throw 1002;
 		if (userInfo.username.length > 10) throw 1003;
 		if (userInfo.password.length < 6) throw 1004;

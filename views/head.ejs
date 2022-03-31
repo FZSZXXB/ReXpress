@@ -54,7 +54,12 @@
 					<div class="mobile item" style="font-size: 23px; text-align: center;" href="/">三叶虫校刊网</div>
 					<% if (user) { %>
 					<span class="item user" style="text-align: center;">已登录用户：<%= user.username %></span>
-					<a class="item ui red button" href="<%= web_util.makeUrl(['loginPage', 'logout'], { url: req.query['url'] || req.originalUrl }) %>"><i class="fal fa-power-off"></i>注销</a>
+					<div class="item">
+						<div class="ui fluid buttons">
+							<a class="ui red button" href="<%= web_util.makeUrl(['loginPage', 'logout'], { url: req.query['url'] || req.originalUrl }) %>"><i class="fad fa-power-off"></i>注销</a>
+						</div>
+					</div>
+					
 					<% } else { %>
 					<div class="item">
 						<div class="ui fluid buttons">
