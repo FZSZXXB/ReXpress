@@ -45,7 +45,7 @@ function show_error(error) {
   });
 }
 function success(session_id) {
-	window.location.href = location.protocol + '//' + location.host + <%- serializejs('/') %>;
+	window.location.href = location.protocol + '//' + location.host + <%- serializejs('/news' + (req.query.nex || '/')) %>;
 }
 function login() {
 	$("#login").addClass("loading");
