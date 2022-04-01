@@ -77,6 +77,9 @@ router.get('/:id/edit', checklogin, function (req, res) {
 				res.render('edit');
 			} else {
 				let files = listFiles(id);
+				results[0].title = decode(results[0].title);
+				results[0].description = decode(results[0].description);
+				results[0].content = decode(results[0].content);
 				res.render('edit', {
 					article: results[0],
 					files: files
