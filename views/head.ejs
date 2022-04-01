@@ -35,15 +35,15 @@
 				<div class="ui simple dropdown desktop item">
 					<span class="user" style="margin-right: 5px;"><%= user.username %></span><i class="fad fa-angle-down"></i>
 					<div class="menu">
-						<a class="item" href="<%= web_util.makeUrl(['loginPage', 'logout'], { req.query['url'] || req.originalUrl }) %>"><i class="fad fa-power-off"></i>注销</a>
+						<a class="item" href="<%= web_util.makeUrl(['loginPage', 'logout'], { nex:req.query['url'] || req.originalUrl }) %>"><i class="fad fa-power-off"></i>注销</a>
 					</div>
 				</div>
 				<% } else { %>
 				<div class="desktop item">
-					<a class="ui button" style="margin-right: 0.5em; " href="<%= web_util.makeUrl(['loginPage'], { req.query['url'] || req.originalUrl }) %>">
+					<a class="ui button" style="margin-right: 0.5em; " href="<%= web_util.makeUrl(['loginPage'], { nex:req.query['url'] || req.originalUrl }) %>">
 						登录
 					</a>
-					<a class="ui primary button" href="<%= web_util.makeUrl(['registerPage'], { req.query['url'] || req.originalUrl }) %>">
+					<a class="ui primary button" href="<%= web_util.makeUrl(['registerPage'], { nex:req.query['url'] || req.originalUrl }) %>">
 						注册
 					</a>
 				</div>
@@ -56,14 +56,14 @@
 					<span class="item user" style="text-align: center;">已登录用户：<%= user.username %></span>
 					<div class="item">
 						<div class="ui fluid buttons">
-							<a class="ui red button" href="<%= web_util.makeUrl(['loginPage', 'logout'], { req.query['url'] || req.originalUrl }) %>"><i class="fad fa-power-off"></i>注销</a>
+							<a class="ui red button" href="<%= web_util.makeUrl(['loginPage', 'logout'], { nex:req.query['url'] || req.originalUrl }) %>"><i class="fad fa-power-off"></i>注销</a>
 						</div>
 					</div>
 					
 					<% } else { %>
 					<div class="item">
 						<div class="ui fluid buttons">
-							<a class="ui button" href="<%= web_util.makeUrl(['loginPage'], { req.query['url'] || req.originalUrl }) %>">登录</a><a class="ui primary button" href="<%= web_util.makeUrl(['registerPage'], { req.query['url'] || req.originalUrl }) %>">注册</a>
+							<a class="ui button" href="<%= web_util.makeUrl(['loginPage'], { nex:req.query['url'] || req.originalUrl }) %>">登录</a><a class="ui primary button" href="<%= web_util.makeUrl(['registerPage'], { nex:req.query['url'] || req.originalUrl }) %>">注册</a>
 						</div>
 					</div>
 					<% } %>

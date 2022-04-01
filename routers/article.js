@@ -15,6 +15,19 @@ function checklogin(req, res, next) {
 		res.redirect('/loginPage');
 	}
 }
+
+function encode(str) {
+	let temp = str.replace(/\'/g,"&#39;");
+	temp = temp.replace(/\"/g,"&quot;");
+	return temp;
+}
+
+function decode(str) {
+	let temp = str.replace(/&#39;/g,"\'");
+	temp = temp.replace(/&quot;/g,"\"");
+	return temp;
+}
+
 //文章内容页面
 router.get('/:id/', function (req, res) {
 	try {
@@ -27,13 +40,11 @@ router.get('/:id/', function (req, res) {
 				let readTime = results[0].content.length / 400;
 				readTime = Math.round(readTime);
 				if (readTime < 1) readTime = 1;
-				let temp = results[0].content.replace(/&#39;/g,"\'");
-				temp = temp.replace(/&quot;/g,"\"");
-				temp =
-					md.render(temp)
+				results[0].title = decode(results[0].title);
+				results[0].content =
+					md.render(decode(results[0].content))
 						.replace('<table>', '<table class="ui very basic unstackable table">')
 						.replace(new RegExp('<img src=(.+) alt="">', 'g'), '<a href=$1 class="js_gallery_evaluate" data-fancybox="gallery" data-captain=$1><img src=$1 alt=""></a>');
-				results[0].content = temp;
 				res.render('article', {
 					readTime: readTime,
 					article: results[0]
@@ -90,18 +101,17 @@ router.post('/:id/edit', function (req, res) {
 			connection.query(`SELECT * FROM article WHERE id = ${id}`, function (error, results, fields) {
 				let nowTime = web_util.getCurrentDate(true);
 				let str = req.body.content;
-				let temp = str.replace(/\'/g,"&#39;");
-				temp = temp.replace(/\"/g,"&quot;");
+				
 				if (results.length === 0) {
 					connection.query(`INSERT INTO article(title,create_time,update_time,description,content,music_server,music_id) \
-										VALUES("${req.body.title}",${nowTime},${nowTime},"${req.body.description}","${temp}", "${req.body.music_server}", "${req.body.music_id}")`, function (error, rows) {
+										VALUES("${encode(req.body.title)}",${nowTime},${nowTime},"${encode(req.body.description)}","${encode(req.body.content)}", "${req.body.music_server}", "${req.body.music_id}")`, function (error, rows) {
 						if (error)
 							res.send(JSON.stringify({ error_code: 3009, detail: error.message }));
 						else 
 							res.send(JSON.stringify({ error_code: 1, article_id: rows.insertId }));
 					});
 				} else {
-					connection.query(`UPDATE article SET title="${req.body.title}",update_time=${nowTime},description="${req.body.description}",content="${temp}",music_server="${req.body.music_server}",music_id="${req.body.music_id}" WHERE id=${id}`, function (error, results, fields) {
+					connection.query(`UPDATE article SET title="${encode(req.body.title)}",update_time=${nowTime},description="${encode(req.body.description)}",content="${encode(req.body.content)}",music_server="${req.body.music_server}",music_id="${req.body.music_id}" WHERE id=${id}`, function (error, results, fields) {
 						if (error)
 							res.send(JSON.stringify({ error_code: 3009, detail: error.message }));
 						else
