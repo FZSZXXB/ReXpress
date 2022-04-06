@@ -6,36 +6,36 @@ const Api = require('./api');
 const url = require("url");
 const fs = require("fs");
 
-module.exports = function (app) {
+module.exports = async (app) => {
 	// 路由挂载
 	// 首页
 	
-	function encode(str) {
+	async function encode(str) {
 		let temp = str.replace(/\'/g,"&#39;");
 		temp = temp.replace(/\"/g,"&quot;");
 		return temp;
 	}
 
-	function decode(str) {
+	async function decode(str) {
 		let temp = str.replace(/&#39;/g,"\'");
 		temp = temp.replace(/&quot;/g,"\"");
 		return temp;
 	}
 
-	app.get('/', function (req, res) {
+	app.get('/', async (req, res) => {
 		try {
 			res.locals.user = req.session.user;
 			let page = parseInt(req.query.page || 1);// 页码
 			const len = 6;
 			let start = (page - 1) * len;
-			connection.query(`SELECT * FROM article ORDER BY article.create_time DESC`, function (error, results, fields) {
+			connection.query(`SELECT * FROM article ORDER BY article.create_time DESC`, async (error, results, fields) => {
 				let L = results.length;
 				let paginate = { currPage: page, pageCnt: Math.ceil(L / len)};
 				if (error) throw error;
 				let arr = [], end = Math.min(start + len, L);
 				for (let i = start; i < end; ++i) {
-					results[i].title = decode(results[i].title);
-					results[i].description = decode(results[i].description);
+					results[i].title = await decode(results[i].title);
+					results[i].description = await decode(results[i].description);
 					arr.push(results[i]);
 				}
 				
@@ -50,13 +50,13 @@ module.exports = function (app) {
 		}
 	});
 
-	app.get('/archives', function (req, res) {
+	app.get('/archives', async (req, res) => {
 		try {
 			res.locals.user = req.session.user;
-			connection.query(`SELECT * FROM article ORDER BY article.create_time DESC`, function (error, results, fields) {
+			connection.query(`SELECT * FROM article ORDER BY article.create_time DESC`, async (error, results, fields) => {
 				if (error) throw error;
-				results.forEach(ar => {
-					ar.title = decode(ar.title);
+				await results.forEachAsync(async ar => {
+					ar.title = await decode(ar.title);
 				});
 				res.render("archives", { articles: results });
 			})
