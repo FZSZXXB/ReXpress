@@ -20,8 +20,7 @@ router.get('/',checklogout, function (req, res) {
 router.post('/login', function (req, res) {
 	try {
 		res.setHeader('Content-Type', 'application/json');
-		let reg = new RegExp('[^a-zA-Z0-9]+');
-		if (reg.test(req.body.username)) throw 2001;
+		if (!web_util.checkIdChars(req.body.username)) throw 2001;
 		let encryption = crypto.createHmac('sha256', 'jie').update(req.body.password).digest('hex');
 		connection.query(`select * from user where username = "${req.body.username}" and password = "${encryption}"`, function (error, results, fields) {
 			if (error) throw 2002;

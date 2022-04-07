@@ -8,7 +8,7 @@ let { kill } = require('process');
 //路由对象
 let router = express.Router();
 //中间件,未登录不能访问发表文章页面
-function checklogin(req, res, next) {
+let checklogin = async (req, res, next) => {
 	if (req.session.user) {
 		next();
 	} else {
@@ -16,33 +16,33 @@ function checklogin(req, res, next) {
 	}
 }
 
-function encode(str) {
+async function encode(str) {
 	let temp = str.replace(/\'/g,"&#39;");
 	temp = temp.replace(/\"/g,"&quot;");
 	return temp;
 }
 
-function decode(str) {
+async function decode(str) {
 	let temp = str.replace(/&#39;/g,"\'");
 	temp = temp.replace(/&quot;/g,"\"");
 	return temp;
 }
 
 //文章内容页面
-router.get('/:id/', function (req, res) {
+router.get('/:id/', async (req, res) => {
 	try {
 		res.locals.user = req.session.user;
 		let id = parseInt(req.params.id);
-		connection.query(`SELECT * FROM article WHERE id = ${id}`, function (error, results, fields) {
+		connection.query(`SELECT * FROM article WHERE id = ${id}`, async (error, results, fields) => {
 			if (error)
 				res.render('error', { error_code: 4002 });
 			else {
 				let readTime = results[0].content.length / 400;
 				readTime = Math.round(readTime);
 				if (readTime < 1) readTime = 1;
-				results[0].title = decode(results[0].title);
+				results[0].title = await decode(results[0].title);
 				results[0].content =
-					md.render(decode(results[0].content))
+					md.render(await decode(results[0].content))
 						.replace('<table>', '<table class="ui very basic unstackable table">')
 						.replace(new RegExp('<img src=(.+) alt="">', 'g'), '<a href=$1 class="js_gallery_evaluate" data-fancybox="gallery" data-captain=$1><img src=$1 alt=""></a>');
 				res.render('article', {
@@ -56,7 +56,7 @@ router.get('/:id/', function (req, res) {
 	}
 })
 
-function listFiles(id) {
+async function listFiles(id) {
 	try {
 		let dir = `./data/${id}`;
 		let list = fs.readdirSync(dir);
@@ -67,19 +67,19 @@ function listFiles(id) {
 	}
 }
 
-router.get('/:id/edit', checklogin, function (req, res) {
+router.get('/:id/edit', checklogin, async (req, res) => {
 	try {
 		// console.log(111);
 		res.locals.user = req.session.user;
 		let id = parseInt(req.params.id);
-		connection.query(`SELECT * FROM article WHERE id = ${id}`, function (error, results, fields) {
+		connection.query(`SELECT * FROM article WHERE id = ${id}`, async (error, results, fields) => {
 			if (results.length === 0) {
 				res.render('edit');
 			} else {
-				let files = listFiles(id);
-				results[0].title = decode(results[0].title);
-				results[0].description = decode(results[0].description);
-				results[0].content = decode(results[0].content);
+				let files = await listFiles(id);
+				results[0].title = await decode(results[0].title);
+				results[0].description = await decode(results[0].description);
+				results[0].content = await decode(results[0].content);
 				res.render('edit', {
 					article: results[0],
 					files: files
@@ -91,7 +91,7 @@ router.get('/:id/edit', checklogin, function (req, res) {
 	}
 })
 
-router.post('/:id/edit', function (req, res) {
+router.post('/:id/edit', async (req, res) => {
 	try {
 		res.setHeader('Content-Type', 'application/json');
 		if (!req.session.user)
@@ -101,13 +101,14 @@ router.post('/:id/edit', function (req, res) {
 			console.log("id = " + id);
 			if (req.body.title.length === 0) throw 3002; // 标题无效
 			if (req.body.music_server.length >= 1 && req.body.music_id.length < 1) req.body.music_server = '';
-			connection.query(`SELECT * FROM article WHERE id = ${id}`, function (error, results, fields) {
+			if (req.body.music_id)
+			connection.query(`SELECT * FROM article WHERE id = ${id}`, async (error, results, fields) => {
 				let nowTime = web_util.getCurrentDate(true);
 				let str = req.body.content;
 				
 				if (results.length === 0) {
 					connection.query(`INSERT INTO article(title,create_time,update_time,description,content,music_server,music_id) \
-										VALUES("${encode(req.body.title)}",${nowTime},${nowTime},"${encode(req.body.description)}","${encode(req.body.content)}", "${req.body.music_server}", "${req.body.music_id}")`, function (error, rows) {
+										VALUES("${await encode(req.body.title)}",${nowTime},${nowTime},"${await encode(req.body.description)}","${await encode(req.body.content)}", "${req.body.music_server}", "${req.body.music_id}")`, function (error, rows) {
 						if (error)
 							res.send(JSON.stringify({ error_code: 3009, detail: error.message }));
 						else 
@@ -128,7 +129,7 @@ router.post('/:id/edit', function (req, res) {
 	}
 })
 
-router.post('/:id/delete', function (req, res) {
+router.post('/:id/delete', async (req, res) => {
 	try {
 		res.setHeader('Content-Type', 'application/json');
 		let id = parseInt(req.params.id);

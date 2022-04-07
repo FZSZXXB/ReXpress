@@ -3,6 +3,15 @@ let moment = require('moment');
 let url = require('url');
 let querystring = require('querystring');
 
+Array.prototype.forEachAsync = Array.prototype.mapAsync = async function (fn) {
+  return Promise.all(this.map(fn));
+};
+
+Array.prototype.filterAsync = async function (fn) {
+  let a = await this.mapAsync(fn);
+  return this.filter((x, i) => a[i]);
+};
+
 global.ErrorMessage = class ErrorMessage extends Error {
 	constructor(message, nextUrls, details) {
 		super(message);
@@ -12,6 +21,10 @@ global.ErrorMessage = class ErrorMessage extends Error {
 };
 
 module.exports = {
+	checkIdChars(str) {
+		let reg = new RegExp('[^a-zA-Z0-9]+');
+		return !reg.test(str);
+	},
 	formatDate(ts, format) {
 		if (ts == null) {
 			return "Unknown";

@@ -28,7 +28,7 @@ let upload = multer({
 	})
 });
 
-router.get('/error/:error_code', function (req, res) {
+router.get('/error/:error_code', async (req, res) => {
 	try {
 		res.locals.user = req.session.user;
 		res.render('error', { error_code: parseInt(req.params.error_code) });
@@ -37,7 +37,7 @@ router.get('/error/:error_code', function (req, res) {
 	}
 })
 
-router.get('/download/:id/:file', function (req, res) {
+router.get('/download/:id/:file', async (req, res) => {
 	try {
 		let id = parseInt(req.params.id);
 		let filename = req.params.file;
@@ -49,7 +49,7 @@ router.get('/download/:id/:file', function (req, res) {
 	}
 })
 
-router.post('/upload/:id', checklogin, upload.single('file'), function (req, res) {
+router.post('/upload/:id', checklogin, upload.single('file'), async (req, res) => {
 	try {
 		// console.log(222);
 		res.setHeader('Content-Type', 'application/json');
@@ -70,14 +70,13 @@ router.post('/upload/:id', checklogin, upload.single('file'), function (req, res
 	}
 })
 
-router.post('/delete/:id/:file', checklogin, function (req, res) {
+router.post('/delete/:id/:file', checklogin, async (req, res) => {
 	try {
 		res.setHeader('Content-Type', 'application/json');
 		if (typeof req.params.file === 'string' && (req.params.file.includes('../'))) throw 9001; // 危险操作
-		fs.unlink(`./data/${req.params.id}/${req.params.file}`, (err) => {
-			if (err) throw err;
-			res.send(JSON.stringify({ error_code: 1 }));
-		});
+		let result = fs.unlinkSync(`./data/${req.params.id}/${req.params.file}`);
+		if (result != undefined) throw 9002;
+		res.send(JSON.stringify({ error_code: 1 }));
 	} catch (e) {
 		console.log(e);
 		res.send(JSON.stringify({ error_code: e.message }));
