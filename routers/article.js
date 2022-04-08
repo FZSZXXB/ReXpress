@@ -117,7 +117,7 @@ router.post('/:id/edit', async (req, res) => {
 							res.send(JSON.stringify({ error_code: 1, article_id: rows.insertId }));
 					});
 				} else {
-					connection.query(`UPDATE article SET title="${encode(req.body.title)}",update_time=${nowTime},description="${encode(req.body.description)}",content="${encode(req.body.content)}",music_server="${req.body.music_server}",music_id="${req.body.music_id}" WHERE id=${id}`, function (error, results, fields) {
+					connection.query(`UPDATE article SET title="${await encode(req.body.title)}",update_time=${nowTime},description="${await encode(req.body.description)}",content="${await encode(req.body.content)}",music_server="${req.body.music_server}",music_id="${req.body.music_id}" WHERE id=${id}`, function (error, results, fields) {
 						if (error)
 							res.send(JSON.stringify({ error_code: 3009, detail: error.message }));
 						else
