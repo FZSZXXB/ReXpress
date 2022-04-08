@@ -31,7 +31,7 @@ let upload = multer({
 router.get('/error/:error', async (req, res) => {
 	try {
 		res.locals.user = req.session.user;
-		res.render('error', { error: parseInt(req.params.error_code) });
+		res.render('error', { error: req.params.error });
 	} catch (e) {
 		console.warn(e);
 	}

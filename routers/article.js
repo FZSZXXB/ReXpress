@@ -101,23 +101,25 @@ router.post('/:id/edit', async (req, res) => {
 		else {
 			let id = parseInt(req.params.id);
 			console.log("id = " + id);
-			if (req.body.title.length === 0) throw 3002; // 标题无效
-			if (req.body.music_server.length >= 1 && req.body.music_id.length < 1) req.body.music_server = '';
-			if (req.body.music_id)
+			let article = req.body;
+			article.title = await encode(article.title);
+			article.description = await encode(article.description);
+			article.content = await encode(article.content);
+			if (article.title.length === 0) throw 3002; // 标题无效
+			if (!web_util.checkIdChars(article.music_id)) article.music_id = '';
+			if (article.music_server.length >= 1 && article.music_id.length < 1) article.music_server = '';
 			connection.query(`SELECT * FROM article WHERE id = ${id}`, async (error, results, fields) => {
 				let nowTime = web_util.getCurrentDate(true);
-				let str = req.body.content;
-				
 				if (results.length === 0) {
 					connection.query(`INSERT INTO article(title,create_time,update_time,description,content,music_server,music_id) \
-										VALUES("${await encode(req.body.title)}",${nowTime},${nowTime},"${await encode(req.body.description)}","${await encode(req.body.content)}", "${req.body.music_server}", "${req.body.music_id}")`, function (error, rows) {
+										VALUES("${article.title}",${nowTime},${nowTime},"${article.description}","${article.content}", "${article.music_server}", "${article.music_id}")`, function (error, rows) {
 						if (error)
 							res.send(JSON.stringify({ error_code: 3009, detail: error.message }));
 						else 
 							res.send(JSON.stringify({ error_code: 1, article_id: rows.insertId }));
 					});
 				} else {
-					connection.query(`UPDATE article SET title="${await encode(req.body.title)}",update_time=${nowTime},description="${await encode(req.body.description)}",content="${await encode(req.body.content)}",music_server="${req.body.music_server}",music_id="${req.body.music_id}" WHERE id=${id}`, function (error, results, fields) {
+					connection.query(`UPDATE article SET title="${article.title}",update_time=${nowTime},description="${article.description}",content="${article.content}",music_server="${article.music_server}",music_id="${article.music_id}" WHERE id=${id}`, function (error, results, fields) {
 						if (error)
 							res.send(JSON.stringify({ error_code: 3009, detail: error.message }));
 						else

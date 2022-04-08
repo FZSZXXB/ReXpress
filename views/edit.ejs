@@ -28,7 +28,7 @@ else { this.title = "新建文章"; }
     } %>
   </textarea>
   <div class="ui bottom attached segment">
-    <table class="ui very basic center aligned table">
+    <table class="ui very basic center aligned unstackable table">
       <thead>
         <tr>
           <th class="left aligned">文件名</th>
@@ -159,7 +159,18 @@ function submit(id) {
           break;
       }
     },
-    error: show_error("文章发布", "您与服务器断开连接。")
+    error: function (xhr, textStatus, errorThrown) {
+      show_error("文章发布", "您与服务器断开连接。");
+      /*错误信息处理*/
+      console.log("进入error---");
+      console.log("状态码："+xhr.status);
+      console.log("状态:"+xhr.readyState);//当前状态,0-未初始化，1-正在载入，2-已经载入，3-数据进行交互，4-完成。
+      console.log("错误信息:"+xhr.statusText );
+      console.log("返回响应信息："+xhr.responseText );//这里是详细的信息
+      console.log("请求状态："+textStatus); 
+      console.log(errorThrown);
+      console.log("请求失败"); 
+    }
   });
 }
 function deleteFile(id, filename) {
