@@ -6,7 +6,7 @@ let router = express.Router();
 //中间件,登录了无法访问注册登录页面
 function checklogout(req,res,next){
 	if(req.session.user){
-		res.redirect('/')
+		res.redirect('/news/')
 	}else{
 		next();
 	}
@@ -43,7 +43,7 @@ router.post('/login', function (req, res) {
 //退出登录
 router.get('/logout', function (req, res) {
 	req.session.user = '';
-	res.redirect('/loginPage');
+	res.redirect('/news/loginPage');
 })
 //导出路由对象
 module.exports = router;

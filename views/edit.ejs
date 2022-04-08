@@ -93,8 +93,8 @@ else { this.title = "新建文章"; }
     <div class="field">
       <label>内容</label>
       <textarea id='tmp' style="display: none;"><%= 'undefined' == typeof article ? '' : article.content %></textarea>
-      <link rel="stylesheet" href="/css/markdown-palettes.css">
-      <script src="/js/markdown-palettes.min.js"></script>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/markdown-palettes@0.4.13/dist/markdown-palettes.css">
+      <script src="https://cdn.jsdelivr.net/npm/markdown-palettes@0.4.13/dist/markdown-palettes.min.js"></script>
       <div id="editor-container" style="height: 700px;">
         <div id="editor">正在加载 Markdown 编辑器. . .</div>
       </div>
@@ -127,12 +127,12 @@ function success(title, id) {
     title: title + "成功！",
     icon: "success"
   }).then(function () {
-    window.location.href = location.protocol + '//' + location.host + '/article/' + id;
+    window.location.href = location.protocol + '//' + location.host + '/news/article/' + id;
   });
 }
 function submit(id) {
   $.ajax({
-    url: `/article/${id}/edit`,
+    url: `/news/article/${id}/edit`,
     type: 'POST',
     data: {
       'title': $('#title').val(),
@@ -178,7 +178,7 @@ function deleteFile(id, filename) {
   }).then((value) => {
     if (value) {
       $.ajax({
-        url: `/api/delete/${id}/${filename}`,
+        url: `/news/api/delete/${id}/${filename}`,
         type: 'POST',
         async: true,
         success: function (data) {
@@ -207,7 +207,7 @@ function deleteFile(id, filename) {
 function uploadFile(id) {
   var formData = new FormData($('#uploadForm')[0]); 
   $.ajax({
-    url: `/api/upload/${id}`,
+    url: `/news/api/upload/${id}`,
     type: 'POST',
     data: formData,
     async: true,

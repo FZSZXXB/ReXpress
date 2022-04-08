@@ -8,11 +8,11 @@ const compressing = require('compressing');
 //路由对象
 let router = express.Router();
 // //中间件,未登录不能访问发表文章页面
-function checklogin(req, res, next) {
+async function checklogin(req, res, next) {
 	if (req.session.user) {
 		next();
 	} else {
-		res.redirect('/loginPage');
+		res.redirect('/news/loginPage');
 	}
 }
 
@@ -28,12 +28,12 @@ let upload = multer({
 	})
 });
 
-router.get('/error/:error_code', async (req, res) => {
+router.get('/error/:error', async (req, res) => {
 	try {
 		res.locals.user = req.session.user;
-		res.render('error', { error_code: parseInt(req.params.error_code) });
+		res.render('error', { error: req.params.error });
 	} catch (e) {
-		console.warn(e);
+		console.log(e);
 	}
 })
 
