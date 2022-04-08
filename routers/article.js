@@ -60,6 +60,8 @@ async function listFiles(id) {
 	try {
 		let dir = `./data/${id}`;
 		let list = fs.readdirSync(dir);
+		list.sort((a, b) => parseInt(a) - parseInt(b));
+		console.log("Get file list sorted: " + list);
 		return list;
 	} catch (e) {
 		console.warn(e);
