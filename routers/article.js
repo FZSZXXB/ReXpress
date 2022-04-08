@@ -12,7 +12,7 @@ let checklogin = async (req, res, next) => {
 	if (req.session.user) {
 		next();
 	} else {
-		res.redirect('/loginPage');
+		res.redirect('/news/loginPage');
 	}
 }
 
@@ -74,6 +74,7 @@ router.get('/:id/edit', checklogin, async (req, res) => {
 		// console.log(111);
 		res.locals.user = req.session.user;
 		let id = parseInt(req.params.id);
+		if (req.session.user.username != 'Reqwey' && id === 1) res.redirect('/news/api/error/该文章暂不允许编辑');
 		connection.query(`SELECT * FROM article WHERE id = ${id}`, async (error, results, fields) => {
 			if (results.length === 0) {
 				res.render('edit');
@@ -103,7 +104,6 @@ router.post('/:id/edit', async (req, res) => {
 			console.log("id = " + id);
 			if (req.body.title.length === 0) throw 3002; // 标题无效
 			if (req.body.music_server.length >= 1 && req.body.music_id.length < 1) req.body.music_server = '';
-			if (req.body.music_id)
 			connection.query(`SELECT * FROM article WHERE id = ${id}`, async (error, results, fields) => {
 				let nowTime = web_util.getCurrentDate(true);
 				let str = req.body.content;

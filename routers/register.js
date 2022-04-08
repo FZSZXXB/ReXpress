@@ -10,7 +10,7 @@ let router = express.Router();
 //中间件,登录了无法访问注册登录页面
 async function checklogout(req, res, next) {
 	if (req.session.user) {
-		res.redirect('/')
+		res.redirect('/news/')
 	} else {
 		next();
 	}
@@ -18,12 +18,14 @@ async function checklogout(req, res, next) {
 //注册页面
 router.get('/', checklogout, async (req, res) => {
 	res.locals.user = req.session.user;
-	res.render('register');
+	// res.render('register');
+	res.redirect('/news/api/error/注册通道已关闭');
 })
 //注册
 router.post('/register', async (req, res) => {
 	try {
 		res.setHeader('Content-Type', 'application/json');
+		throw 114514;
 		let userInfo = req.body;
 		if (!web_util.checkIdChars(userInfo.username)) throw 1001;
 		if (userInfo.username.length < 2) throw 1002;

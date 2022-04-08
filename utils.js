@@ -57,8 +57,8 @@ module.exports = {
 		return parseInt(+d / 1000);
 	},
 	makeUrl(req_params, form) {
-		let res = '';
-		if (!req_params) res = '/';
+		let res = '/news';
+		if (!req_params) res = '/news';
 		else if (req_params.originalUrl) {
 			let u = url.parse(req_params.originalUrl);
 			res = u.pathname;
