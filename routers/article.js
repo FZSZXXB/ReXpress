@@ -74,6 +74,7 @@ router.get('/:id/edit', checklogin, async (req, res) => {
 		// console.log(111);
 		res.locals.user = req.session.user;
 		let id = parseInt(req.params.id);
+		if (req.session.user.username != 'Reqwey' && id === 1) res.redirect('/news/api/error/该文章暂不允许编辑');
 		connection.query(`SELECT * FROM article WHERE id = ${id}`, async (error, results, fields) => {
 			if (results.length === 0) {
 				res.render('edit');
