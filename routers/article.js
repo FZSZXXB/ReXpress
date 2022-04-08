@@ -62,7 +62,7 @@ async function listFiles(id) {
 		let list = fs.readdirSync(dir);
 		return list;
 	} catch (e) {
-		console.log(e);
+		console.warn(e);
 		return null;
 	}
 }

@@ -45,7 +45,7 @@ module.exports = async (app) => {
 				});
 			})
 		} catch (e) {
-			console.log(e);
+			console.warn(e);
 			// res.render('error', { err: e });
 		}
 	});
@@ -61,7 +61,7 @@ module.exports = async (app) => {
 				res.render("archives", { articles: results });
 			})
 		} catch (e) {
-			console.log(e);
+			console.warn(e);
 			// res.render('error', { err: e });
 		}
 	});

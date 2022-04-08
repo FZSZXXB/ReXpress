@@ -16,12 +16,12 @@ async function checklogout(req, res, next) {
 	}
 }
 //注册页面
-router.get('/', checklogout, function (req, res) {
+router.get('/', checklogout, async (req, res) => {
 	res.locals.user = req.session.user;
 	res.render('register');
 })
 //注册
-router.post('/register', function (req, res) {
+router.post('/register', async (req, res) => {
 	try {
 		res.setHeader('Content-Type', 'application/json');
 		let userInfo = req.body;
@@ -35,7 +35,7 @@ router.post('/register', function (req, res) {
 			else res.send(JSON.stringify({ error_code: 1 }));
 		});
 	} catch (e) {
-		console.log(e);
+		console.warn(e);
 		res.send(JSON.stringify({ error_code: e }));
 	}
 })

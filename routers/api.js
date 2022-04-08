@@ -33,7 +33,7 @@ router.get('/error/:error_code', async (req, res) => {
 		res.locals.user = req.session.user;
 		res.render('error', { error_code: parseInt(req.params.error_code) });
 	} catch (e) {
-		console.log(e);
+		console.warn(e);
 	}
 })
 
@@ -45,7 +45,7 @@ router.get('/download/:id/:file', async (req, res) => {
 			console.log("Error: ", error)
 		});
 	} catch (e) {
-		console.log(e);
+		console.warn(e);
 	}
 })
 
@@ -65,7 +65,7 @@ router.post('/upload/:id', checklogin, upload.single('file'), async (req, res) =
 		});
 		res.send(JSON.stringify({ error_code: 1 }));
 	} catch (e) {
-		console.log(e);
+		console.warn(e);
 		res.send(JSON.stringify({ error_code: e, detail: e.message }));
 	}
 })
@@ -78,7 +78,7 @@ router.post('/delete/:id/:file', checklogin, async (req, res) => {
 		if (result != undefined) throw 9002;
 		res.send(JSON.stringify({ error_code: 1 }));
 	} catch (e) {
-		console.log(e);
+		console.warn(e);
 		res.send(JSON.stringify({ error_code: e.message }));
 	}
 })

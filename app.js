@@ -47,5 +47,5 @@ app.use((req, res, next) => {
 router(app);
 
 app.listen('8003', function () {
-	console.log("服务器在端口8003启动");
+	console.log("Website loaded on port 8003.");
 })
