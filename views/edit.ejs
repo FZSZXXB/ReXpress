@@ -93,8 +93,8 @@ else { this.title = "新建文章"; }
     <div class="field">
       <label>内容</label>
       <textarea id='tmp' style="display: none;"><%= 'undefined' == typeof article ? '' : article.content %></textarea>
-      <link rel="stylesheet" href="/css/markdown-palettes.css">
-      <script src="/js/markdown-palettes.min.js"></script>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/markdown-palettes@0.4.13/dist/markdown-palettes.css">
+      <script src="https://cdn.jsdelivr.net/npm/markdown-palettes@0.4.13/dist/markdown-palettes.min.js"></script>
       <div id="editor-container" style="height: 700px;">
         <div id="editor">正在加载 Markdown 编辑器. . .</div>
       </div>
