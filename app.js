@@ -27,7 +27,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //设置session
 app.use(session({
 	secret: 'FzsZdjS0oI_Re4WEphi',
-	name: 'rateboard',
+	name: 'newspaper',
 	saveUninitialized: true,
 	rolling: true,
 	resave: false,

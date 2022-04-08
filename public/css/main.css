@@ -64,7 +64,7 @@
   font-family: 'fwzc';
   font-weight: bold;
   font-style: normal;
-  src: url('/news/fonts/fwzcN.OTF');
+  src: url('https://cdn.jsdelivr.net/gh/FYMS-OI/cdn@master/bin_data/fwzcN.OTF');
   font-display: swap;
 }
 
