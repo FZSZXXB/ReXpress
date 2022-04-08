@@ -104,7 +104,6 @@ router.post('/:id/edit', async (req, res) => {
 			console.log("id = " + id);
 			if (req.body.title.length === 0) throw 3002; // 标题无效
 			if (req.body.music_server.length >= 1 && req.body.music_id.length < 1) req.body.music_server = '';
-			if (req.body.music_id)
 			connection.query(`SELECT * FROM article WHERE id = ${id}`, async (error, results, fields) => {
 				let nowTime = web_util.getCurrentDate(true);
 				let str = req.body.content;
