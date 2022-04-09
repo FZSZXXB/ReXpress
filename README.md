@@ -1,5 +1,5 @@
 
-<p align="center"><h1>ReXpress Writer</h1></p>
+<p align="center"><img src="./public/img/logo.png" /></p>
 
 ## What's This
 A modern blog system, which has file uploading system and realtime preview markdown editor(By @luogu-dev's [Markdown*Palletes](https://github.com/luogu-dev/markdown-palettes)).
