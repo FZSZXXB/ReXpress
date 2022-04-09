@@ -2,7 +2,7 @@
 <p align="center"><img src="./public/img/logo.png" /></p>
 
 ## What's This
-A modern blog system, which has file uploading system and realtime preview markdown editor(By @luogu-dev's [Markdown*Palletes](https://github.com/luogu-dev/markdown-palettes)).
+A modern blog system, which has an integrated file uploading system and a real-time previewing Markdown editor(By @luogu-dev's [Markdown*Palletes](https://github.com/luogu-dev/markdown-palettes)).
 
 You can clone the `main` branch. The `server` branch is a customized edition for our server.
 
