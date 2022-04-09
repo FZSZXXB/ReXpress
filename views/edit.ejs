@@ -129,12 +129,12 @@ function success(title, id) {
     title: title + "成功！",
     icon: "success"
   }).then(function () {
-    window.location.href = location.protocol + '//' + location.host + '/article/' + id;
+    window.location.href = location.protocol + '//' + location.host + '/news/article/' + id;
   });
 }
 function submit(id) {
   $.ajax({
-    url: `/article/${id}/edit`,
+    url: `/news/article/${id}/edit`,
     type: 'POST',
     data: {
       'title': $('#title').val(),
@@ -191,7 +191,7 @@ function deleteFile(id, filename) {
   }).then((value) => {
     if (value) {
       $.ajax({
-        url: `/api/delete/${id}/${filename}`,
+        url: `/news/api/delete/${id}/${filename}`,
         type: 'POST',
         async: true,
         success: function (data) {
@@ -220,7 +220,7 @@ function deleteFile(id, filename) {
 function uploadFile(id) {
   var formData = new FormData($('#uploadForm')[0]); 
   $.ajax({
-    url: `/api/upload/${id}`,
+    url: `/news/api/upload/${id}`,
     type: 'POST',
     data: formData,
     async: true,
@@ -245,7 +245,19 @@ function uploadFile(id) {
           break;
       }
     },
-    error: show_error("文件上传", "您与服务器断开连接。")
+    error: function (xhr, textStatus, errorThrown) {
+      show_error("文件上传", "您与服务器断开连接。");
+      /*错误信息处理*/
+      console.log("进入error---");
+      console.log("状态码："+xhr.status);
+      console.log("状态:"+xhr.readyState);//当前状态,0-未初始化，1-正在载入，2-已经载入，3-数据进行交互，4-完成。
+      console.log("错误信息:"+xhr.statusText );
+      console.log("返回响应信息："+xhr.responseText );//这里是详细的信息
+      console.log("请求状态："+textStatus); 
+      console.log(errorThrown);
+      console.log("请求失败"); 
+      show_error("文件上传", "您与服务器断开连接。");
+    }
   });
 
 }

@@ -12,7 +12,7 @@ async function checklogin(req, res, next) {
 	if (req.session.user) {
 		next();
 	} else {
-		res.redirect('/loginPage');
+		res.redirect('/news/loginPage');
 	}
 }
 
@@ -33,7 +33,7 @@ router.get('/error/:error', async (req, res) => {
 		res.locals.user = req.session.user;
 		res.render('error', { error: req.params.error });
 	} catch (e) {
-		console.warn(e);
+		console.log(e);
 	}
 })
 
