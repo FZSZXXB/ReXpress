@@ -50,7 +50,7 @@ function success(session_id) {
 function login() {
 	$("#login").addClass("loading");
 	$.ajax({
-		url: "/news/api/loginPage/login",
+		url: "/news/loginPage/login",
 		type: 'POST',
 		data: {
 			"username": $("#username").val(),
