@@ -1,3 +1,13 @@
+
+<p align="center"><h1>ReXpress Writer</h1></p>
+
+## What's This
+A modern blog system, which has file uploading system and realtime preview markdown editor(By @luogu-dev's [Markdown*Palletes](https://github.com/luogu-dev/markdown-palettes)).
+
+You can clone the `main` branch. The `server` branch is a customized edition for our server.
+
+The Album Auto Generator is customized for [FZSZ's Sanyechong Magazine Official Website](http://fzsztech.fzsz.net/news/) to show their magazines.
+
 ## Init
 Ensure you have Node.js (Latest Version) and MySQL installed.
 
