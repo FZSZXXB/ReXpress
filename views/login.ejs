@@ -45,12 +45,12 @@ function show_error(error) {
   });
 }
 function success(session_id) {
-	window.location.href = location.protocol + '//' + location.host + <%- serializejs(req.query.nex || '/news/' %>;
+	window.location.href = location.protocol + '//' + location.host + <%- serializejs(req.query.nex || '/') %>;
 }
 function login() {
 	$("#login").addClass("loading");
 	$.ajax({
-		url: ".api/loginPage/login",
+		url: "/loginPage/login",
 		type: 'POST',
 		data: {
 			"username": $("#username").val(),

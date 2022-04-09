@@ -38,7 +38,7 @@ function getyear (time) {
       <% lastYear = thisyear; %>
     <% } %>
       <div class="ui segment">
-      <a href="<%= web_util.makeUrl(['article', a.id]) %>"><h4><%= a.title %></h4></a>
+      <a href="/article/<%= a.id %>"><h4><%= a.title %></h4></a>
       </div>
 <% }} else { %>
 <div class="ui placeholder segment">

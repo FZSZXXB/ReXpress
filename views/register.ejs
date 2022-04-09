@@ -35,7 +35,7 @@
 			icon: "success",
 			text: "欢迎你，" + $("#username").val() + "！"
 		}).then(function () {
-			window.location.href = location.protocol + '//' + location.host + <%- serializejs('/news/loginPage') %>;
+			window.location.href = location.protocol + '//' + location.host + <%- serializejs('/') %>;
 		});
 	}
 	function submit() {
@@ -45,7 +45,7 @@
 		}
 		$("#sign_up").addClass("loading");
 		$.ajax({
-			url: '/news/registerPage/register',
+			url: '/registerPage/register',
 			type: 'POST',
 			async: true,
 			data: {

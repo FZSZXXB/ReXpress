@@ -43,7 +43,7 @@ router.post('/login', async (req, res) => {
 //退出登录
 router.get('/logout', async (req, res) => {
 	req.session.user = '';
-	res.redirect('/news/loginPage');
+	res.redirect('/loginPage');
 })
 //导出路由对象
 module.exports = router;

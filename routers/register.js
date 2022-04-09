@@ -18,14 +18,12 @@ let checklogout = async (req, res, next) => {
 //注册页面
 router.get('/', checklogout, async (req, res) => {
 	res.locals.user = req.session.user;
-	// res.render('register');
-	res.redirect('/news/api/error/注册通道已关闭');
+	res.render('register');
 })
 //注册
 router.post('/register', async (req, res) => {
 	try {
 		res.setHeader('Content-Type', 'application/json');
-		throw 114514;
 		let userInfo = req.body;
 		if (!web_util.checkIdChars(userInfo.username)) throw 1001;
 		if (userInfo.username.length < 2) throw 1002;
