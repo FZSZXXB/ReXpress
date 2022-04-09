@@ -27,7 +27,7 @@
   }
 }
 @media only screen and (max-width: 767px) {
-  ::-webkit-scrollbar {
+  /* ::-webkit-scrollbar {
     all: unset !important;
   }
   ::-webkit-scrollbar-track {
@@ -35,7 +35,7 @@
   }
   ::-webkit-scrollbar-thumb {
     all: unset !important;
-  }
+  } */
   .desktop { display: none !important; }
 }
 
