@@ -17,6 +17,14 @@
 <div style="margin-top: 5px;"><%- article.content %></div>
 
 </div>
+
+<script>
+$('#helpReadTime').popup({
+	title : '阅读时长统计',
+  content : '阅读时长根据字数自动计算，没有考虑图片的阅读时间'
+});
+</script>
+
 <% if (article.music_server) { %>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
 <script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>

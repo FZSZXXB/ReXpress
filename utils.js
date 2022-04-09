@@ -12,14 +12,6 @@ Array.prototype.filterAsync = async function (fn) {
   return this.filter((x, i) => a[i]);
 };
 
-global.ErrorMessage = class ErrorMessage extends Error {
-	constructor(message, nextUrls, details) {
-		super(message);
-		this.nextUrls = nextUrls || {};
-		this.details = details;
-	}
-};
-
 module.exports = {
 	checkIdChars(str) {
 		let reg = new RegExp('[^a-zA-Z0-9]+');

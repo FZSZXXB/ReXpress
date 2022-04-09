@@ -12,36 +12,26 @@
 	</div>
 </div>
 </div>
-<script data-cfasync="false" src="<%- lib('semantic-ui/2.4.1/semantic.min.js') %>"></script>
 <script type="text/javascript">
-	function copyText(text) {
-		var $textarea = $('<textarea>');
-		$textarea.text(text);
-		$('body').append($textarea);
-		$textarea.select();
-		document.execCommand('copy');
-		$textarea.remove();
-		swal({
-			title: "复制",
-			icon: "success",
-			text: "内容已复制到剪贴板。"
-		});
-	}
-	$('body').on('click', '*[data-click-copy]', function () {
-		var text = $(this).attr('data-click-copy');
-		copyText(text);
+function copyText(text) {
+	var $textarea = $('<textarea>');
+	$textarea.text(text);
+	$('body').append($textarea);
+	$textarea.select();
+	document.execCommand('copy');
+	$textarea.remove();
+	swal({
+		title: "复制",
+		icon: "success",
+		text: "内容已复制到剪贴板。"
 	});
-	$(function () {
-		$('.ui.dropdown:not(.simple)').dropdown();
-	});
-	
-$('#helpMusicId').popup({
-	title : '获取音乐 ID',
-  content : '音乐 ID 通常可以从网页版的链接中获取，如 https://music.163.com/#/song?id=1400761054。'
+}
+$('body').on('click', '*[data-click-copy]', function () {
+	var text = $(this).attr('data-click-copy');
+	copyText(text);
 });
-$('#helpReadTime').popup({
-	title : '阅读时长统计',
-  content : '阅读时长根据字数自动计算，没有考虑图片的阅读时间'
+$(function () {
+	$('.ui.dropdown:not(.simple)').dropdown();
 });
 $(function () {
 	var $g = $(".js_gallery_evaluate");

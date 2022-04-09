@@ -8,9 +8,9 @@ const path = require('path');
 let router = express.Router();
 
 //中间件,登录了无法访问注册登录页面
-async function checklogout(req, res, next) {
+let checklogout = async (req, res, next) => {
 	if (req.session.user) {
-		res.redirect('/news/')
+		res.redirect('/');
 	} else {
 		next();
 	}

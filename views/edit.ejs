@@ -111,8 +111,10 @@ else { this.title = "新建文章"; }
 </div>
 
 <script>
-// the loader html
-// var sweet_loader = '<div class="sweet_loader"><svg viewBox="0 0 140 140" width="140" height="140"><g class="outline"><path d="m 70 28 a 1 1 0 0 0 0 84 a 1 1 0 0 0 0 -84" stroke="rgba(0,0,0,0.1)" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></g><g class="circle"><path d="m 70 28 a 1 1 0 0 0 0 84 a 1 1 0 0 0 0 -84" stroke="#71BBFF" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-dashoffset="200" stroke-dasharray="300"></path></g></svg></div>';
+$('#helpMusicId').popup({
+	title : '获取音乐 ID',
+  content : '音乐 ID 通常可以从网页版的链接中获取，如 https://music.163.com/#/song?id=1400761054。'
+});
 var markdownEditor = new MarkdownPalettes("#editor");
 markdownEditor.content = $('#tmp').val();
 function show_error(title, error) {
@@ -170,7 +172,6 @@ function submit(id) {
       console.log("请求状态："+textStatus); 
       console.log(errorThrown);
       console.log("请求失败"); 
-      show_error("文件上传", "您与服务器断开连接。");
     }
   });
 }
