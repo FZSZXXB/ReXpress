@@ -6,7 +6,7 @@ let router = express.Router();
 //中间件,登录了无法访问注册登录页面
 let checklogout = async (req, res, next) => {
 	if(req.session.user) {
-		res.redirect('/');
+		res.redirect('/news/');
 	} else {
 		next();
 	}
