@@ -218,7 +218,13 @@ function deleteFile(id, filename) {
   
 }
 function uploadFile(id) {
-  var formData = new FormData($('#uploadForm')[0]); 
+  var formData = new FormData($('#uploadForm')[0]);
+  console.log("Uploading file . . .");
+  swal({
+    title: "正在上传文件. . .",
+    icon: "/img/loading.gif",
+    buttons: false
+  });
   $.ajax({
     url: `/api/upload/${id}`,
     type: 'POST',
