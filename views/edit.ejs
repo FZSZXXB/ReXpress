@@ -60,6 +60,20 @@ else { this.title = "新建文章"; }
       <div class="ui labeled icon pink button" onclick="writeAlbum()"><i class="ui lightning icon"></i>一键生成相册</div>
     </div>
   </div>
+  <div class="ui modal">
+    <i class="close icon"></i>
+    <div class="header">
+      正在上传文件
+    </div>
+    <div class="image content">
+      <div class="image">
+        <img src="/news/img/loading.gif" />
+      </div>
+      <div id="aaa" class="description">
+        进度：0%
+      </div>
+    </div>
+  </div>
 <% } %>
 <div class="ui segment">
   <div class="ui form">
@@ -220,11 +234,9 @@ function deleteFile(id, filename) {
 function uploadFile(id) {
   var formData = new FormData($('#uploadForm')[0]);
   console.log("Uploading file . . .");
-  swal({
-    title: "正在上传文件. . .",
-    icon: "/img/loading.gif",
-    buttons: false
-  });
+  $('.ui.modal').modal({
+      closable  : false
+  }).modal('show');
   $.ajax({
     url: `/api/upload/${id}`,
     type: 'POST',
@@ -250,6 +262,21 @@ function uploadFile(id) {
           show_error("文件上传", `${data.detail}`);
           break;
       }
+    },
+    xhr: function() {      
+      var myXhr = $.ajaxSettings.xhr();
+      if(myXhr.upload){ //检查上传的文件是否存在
+        myXhr.upload.addEventListener('progress',function(e){       
+          var loaded = e.loaded; //已经上传大小情况 
+          var total = e.total; //附件总大小 
+          var percent = Math.floor(100*loaded/total)+"%"; //已经上传的百分比 
+          console.log("已经上传了："+percent); 
+          $("#aaa").text("进度："+percent);
+          //显示进度条    
+          //  $("#content").css("width",percent).css("height",20).css("margin-top",8).css("backgroundColor","#33CCFF").css("color","white").html("<b>"+percent+"</b>");                                
+        }, false); // for handling the progress of the upload
+      }
+      return myXhr;
     },
     error: show_error("文件上传", "您与服务器断开连接。")
   });
