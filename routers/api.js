@@ -41,11 +41,14 @@ router.get('/download/:id/:file', (req, res) => {
 		let id = parseInt(req.params.id);
 		let filename = req.params.file;
 		if (typeof filename === 'string' && (filename.includes('../'))) res.sendStatus(404);
-		fs.access(filename, function(err) {
-			res.sendStatus(404);
-		});
-		res.download(`./data/${id}/${filename}`, function (error) {
-			console.log("Error: ", error)
+		fs.access(`./data/${id}/${filename}`, function (err) {
+			if (!err) {
+				res.download(`./data/${id}/${filename}`, function (error) {
+					console.log("Error: ", error)
+				});
+			} else {
+				res.status(404).send(err);
+			}
 		});
 	} catch (e) {
 		console.warn(e);
