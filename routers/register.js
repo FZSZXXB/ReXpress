@@ -8,21 +8,21 @@ const path = require('path');
 let router = express.Router();
 
 //中间件,登录了无法访问注册登录页面
-let checklogout = async (req, res, next) => {
-	if (req.session.user) {
-		res.redirect('/');
+function checklogout(req, res, next) {
+	if(req.user) {
+		res.redirect('/news/');
 	} else {
 		next();
 	}
 }
+
 //注册页面
-router.get('/', checklogout, async (req, res) => {
-	res.locals.user = req.session.user;
-	// res.render('register');
+router.get('/', checklogout, (req, res) => {
 	res.redirect('/news/api/error/注册通道已关闭');
+	// res.render('register');
 })
 //注册
-router.post('/register', async (req, res) => {
+router.post('/register', (req, res) => {
 	try {
 		res.setHeader('Content-Type', 'application/json');
 		throw 114514;
@@ -32,9 +32,11 @@ router.post('/register', async (req, res) => {
 		if (userInfo.username.length > 10) throw 1003;
 		if (userInfo.password.length < 6) throw 1004;
 		let encryption = crypto.createHmac('sha256', 'jie').update(userInfo.password).digest('hex');
-		connection.query(`INSERT into user(username,password) VALUES("${userInfo.username}","${encryption}")`, async (error, results, fields) => {
+		connection.query(`INSERT into user(username,password) VALUES("${userInfo.username}","${encryption}")`, (error, rows) => {
 			if (error) res.send(JSON.stringify({ error_code: 1005 }));
-			else res.send(JSON.stringify({ error_code: 1 }));
+			else {
+				res.send(JSON.stringify({ error_code: 1 }));
+			}
 		});
 	} catch (e) {
 		console.warn(e);

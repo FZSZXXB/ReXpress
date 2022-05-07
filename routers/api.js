@@ -8,8 +8,8 @@ const compressing = require('compressing');
 //路由对象
 let router = express.Router();
 // //中间件,未登录不能访问发表文章页面
-async function checklogin(req, res, next) {
-	if (req.session.user) {
+function checklogin(req, res, next) {
+	if (req.user) {
 		next();
 	} else {
 		res.redirect('/news/loginPage');
@@ -28,19 +28,22 @@ let upload = multer({
 	})
 });
 
-router.get('/error/:error', async (req, res) => {
+router.get('/error/:error', (req, res) => {
 	try {
-		res.locals.user = req.session.user;
 		res.render('error', { error: req.params.error });
 	} catch (e) {
 		console.log(e);
 	}
 })
 
-router.get('/download/:id/:file', async (req, res) => {
+router.get('/download/:id/:file', (req, res) => {
 	try {
 		let id = parseInt(req.params.id);
 		let filename = req.params.file;
+		if (typeof filename === 'string' && (filename.includes('../'))) res.sendStatus(404);
+		fs.access(filename, function(err) {
+			res.sendStatus(404);
+		});
 		res.download(`./data/${id}/${filename}`, function (error) {
 			console.log("Error: ", error)
 		});
@@ -49,7 +52,7 @@ router.get('/download/:id/:file', async (req, res) => {
 	}
 })
 
-router.post('/upload/:id', checklogin, upload.single('file'), async (req, res) => {
+router.post('/upload/:id', checklogin, upload.single('file'), (req, res) => {
 	try {
 		// console.log(222);
 		res.setHeader('Content-Type', 'application/json');
@@ -70,7 +73,7 @@ router.post('/upload/:id', checklogin, upload.single('file'), async (req, res) =
 	}
 })
 
-router.post('/delete/:id/:file', checklogin, async (req, res) => {
+router.post('/delete/:id/:file', checklogin, (req, res) => {
 	try {
 		res.setHeader('Content-Type', 'application/json');
 		if (typeof req.params.file === 'string' && (req.params.file.includes('../'))) throw 9001; // 危险操作
@@ -80,6 +83,18 @@ router.post('/delete/:id/:file', checklogin, async (req, res) => {
 	} catch (e) {
 		console.warn(e);
 		res.send(JSON.stringify({ error_code: e.message }));
+	}
+})
+
+router.get('/users', (req, res) => {
+	try {
+		connection.query("SELECT * FROM user", (error, results, fields) => {
+			if (error) res.render('error', { error: 'Unknown Error.' });
+			res.send({ users: results });
+		})
+		res.render('error', { error: req.params.error });
+	} catch (e) {
+		console.log(e);
 	}
 })
 //导出路由对象

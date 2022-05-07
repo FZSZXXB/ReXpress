@@ -1,13 +1,20 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-const session = require('express-session');
 const router = require('./routers');
 const serializejs = require('serialize-javascript');
 const connection = require('./routers/mysqldb');
+const jwt = require('express-jwt');
+const jwtSign = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
 
+global.JWT_PRIVATE_KEY = 'FzszXxB2022Reqwey';
 global.web_util = require('./utils');
 
+process.on('unhandledRejection', (reason, p) => {
+	console.log('Promise: ', p, 'Reason: ', reason)
+	// do something
+});
 //创建服务应用
 let app = express();
 //ejs模板引擎配置
@@ -24,25 +31,39 @@ app.use(bodyParser.json());
 //接受req.body参数配置
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-//设置session
-app.use(session({
-	secret: 'FzsZdjS0oI_Re4WEphi',
-	name: 'newspaper',
-	saveUninitialized: true,
-	rolling: true,
-	resave: false,
-	cookie: {
-		maxAge: 114514000000,
-		expires: Date.now() + 114514000000
-	}
-}));
+// Use cookie parser
+app.use(require('cookie-parser')());
 //active
 app.use((req, res, next) => {
 	res.locals.active = req.path.split('/')[1];
-	res.locals.req = req;
-	res.locals.res = res;
 	next();
 });
+
+// login
+app.use(jwt({
+  secret: JWT_PRIVATE_KEY,
+	algorithms: ['HS256'],
+  credentialsRequired: false,
+  getToken: (req) => req.cookies.mt_token
+}));
+
+app.use((err, req, res, next) => {
+  if (err.name === 'UnauthorizedError') {
+    next();
+	} else {
+		next();
+	}
+});
+
+app.use((req, res, next) => {
+	res.locals.req = req;
+	res.locals.res = res;
+	res.locals.user = req.user;
+	console.log(req.user);
+	console.log(req.cookies.mt_token);
+	next();
+});
+
 //找到routers文件下的index.js导出的函数,传入app
 router(app);
 
