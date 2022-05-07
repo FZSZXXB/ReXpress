@@ -218,6 +218,12 @@ function deleteFile(id, filename) {
   
 }
 function uploadFile(id) {
+  console.log("Start uploading. . .");
+  swal({
+    title: "正在上传文件. . .",
+    icon: "/img/loading.gif",
+    buttons: false
+  });
   var formData = new FormData($('#uploadForm')[0]); 
   $.ajax({
     url: `/api/upload/${id}`,
@@ -245,7 +251,11 @@ function uploadFile(id) {
           break;
       }
     },
-    error: show_error("文件上传", "您与服务器断开连接。")
+    error: function (xhr, textStatus, errorThrown) {
+      show_error("文件上传", "您与服务器断开连接。");
+      /*错误信息处理*/
+      show_error("文件上传", "状态码："+xhr.status + '\n状态：'+xhr.readyState + '\n错误信息：'+xhr.statusText + "\n返回响应信息："+xhr.responseText + "\n请求状态："+textStatus + '\n' + errorThrown);
+    }
   });
 
 }
